@@ -6,7 +6,7 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["tabs"],
+  "permissions": ["tabs", "storage"],
   "action": {
     "default_popup": "popup.html",
     "default_title": "Check varanty of site that you are in"
@@ -16,5 +16,11 @@
       "matches": ["<all_urls>"],
       "js": ["content.js"]
     }
-  ]
+  ],
+  "icons": {
+    "16": "images/logo16.png",
+    "32": "images/logo32.png",
+    "64": "images/logo64.png",
+    "128": "images/logo128.png"
+  }
 }
