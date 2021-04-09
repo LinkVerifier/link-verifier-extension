@@ -1,9 +1,33 @@
-//sends URL to extension background
-chrome.runtime.sendMessage({
-    type: 'content',
-    url: window.location.href
-}, response => {
-    console.log(response.message.first_name);
+//var storage = localStorage;
+const DOMAIN = 'localhost:3000';
+let currentURL;
+
+const sendURL = () => {
+    if (currentURL !== window.location.href) {
+        currentURL = window.location.href;
+        chrome.runtime.sendMessage({
+            type: 'content',
+            url: currentURL,
+        }, response => {
+            console.log(response.message.first_name);
+        });
+    }
+}
+
+const updateUSER = () => {
+    if (window.localStorage.getItem('user') !== null 
+    && window.localStorage.getItem('user') !== undefined) chrome.storage.local.set({user: JSON.parse(window.localStorage.getItem('user'))});
+    
+    else chrome.storage.local.set({user: null});
+}
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.type === 'newURL') {
+        sendURL();
+        if (currentURL.includes(DOMAIN)) {
+            updateUSER();
+        }
+    }
 });
 
 
