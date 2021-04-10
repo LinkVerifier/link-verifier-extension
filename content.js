@@ -1,4 +1,3 @@
-//var storage = localStorage;
 const DOMAIN = 'localhost:3000';
 let currentURL;
 
@@ -9,7 +8,7 @@ const sendURL = () => {
             type: 'content',
             url: currentURL,
         }, response => {
-            console.log(response.message.first_name);
+            console.log(response.message);
         });
     }
 }
@@ -17,12 +16,11 @@ const sendURL = () => {
 const updateUSER = () => {
     if (window.localStorage.getItem('user') !== null 
     && window.localStorage.getItem('user') !== undefined) chrome.storage.local.set({user: JSON.parse(window.localStorage.getItem('user'))});
-    
     else chrome.storage.local.set({user: null});
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.type === 'newURL') {
+    if (request.type === 'tabChanged') {
         sendURL();
         if (currentURL.includes(DOMAIN)) {
             updateUSER();
