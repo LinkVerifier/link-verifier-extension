@@ -1,0 +1,13 @@
+.link-verifier-c31d80e9-8bce-4d2a-b4ca-5d82c6536f1d {
+    all: unset;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: calc(100% - 40px);
+    height: 20px;
+    z-index: 10000;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: aquamarine;
+}
