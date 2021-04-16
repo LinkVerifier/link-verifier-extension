@@ -39,7 +39,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    "link": request.url,
+                    "linkName": request.url,
                     "deliveryDate": Date.now()
                 })
             }).then(res => { 

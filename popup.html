@@ -4,9 +4,31 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="popup.css">
+    <title>LinkVerifier</title>
 </head>
 <body>
+    <header>
+        <div class="top">
+            <div class="logo">
+                <span>link</span><span>verifier</span>
+            </div>
+            <div class="profile">
+                <a href="http:localhost:3000/profile">username</a>
+                <img class="profile-image" src="https://www.codeproject.com/KB/GDI-plus/ImageProcessing2/img.jpg">
+            </div>
+            <div class="login invisible">
+               <a>zaloguj sie</a>
+            </div>
+        </div>
+        <div class="menu">
+            <button class="button" onclick="getStatsWindow()">Statystyki</button>
+            <button class="button" onclick="getOpinionsWindow()">Opinie</button>
+            <button class="button" onclick="getStats()">Wystaw ocenę</button>
+        </div>
+    </header>
+    <div class="content"></div>
     <script src="popup.js" charset="utf-8"></script>
 </body>
 </html>

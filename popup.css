@@ -1,0 +1,84 @@
+body {
+    background-image: url("https://www.transparenttextures.com/patterns/inspiration-geometry.png");
+    background-color: white;
+    width: 500px;
+    height: 400px;
+    overflow: hidden;
+}
+header {
+    background: linear-gradient(58deg, rgba(241,196,15,1) 20%, rgba(243,172,18,1) 100%);
+    padding-bottom: 0;
+}
+
+.top {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: large;
+}
+.logo span:nth-child(1) {
+    color: blanchedalmond;
+}
+.logo span:nth-child(2) {
+    color: cornsilk;
+}
+.profile {
+    display: flex;
+}
+.profile a {
+    font-size: 20px;
+    padding-right: 10px;
+    color: blanchedalmond;
+    transition: 0.3s;
+}
+.profile a:hover {
+    text-decoration: none;
+    color: cornsilk;
+}
+.profile-image {
+    flex: end;
+    display: inline-block;
+    width: auto;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.menu {
+    display: flex;
+    justify-content: space-between;
+}
+.button {
+    border: none;
+    padding: 5px;
+    width: 100%;
+    color: white;
+    background: none;
+    transition: 0.3s;
+}
+
+.button:hover {
+    color: cornsilk;
+}
+
+.button:focus {
+    border: none;
+    outline: none;
+
+    color: cornsilk;
+}
+
+.clicked {
+    border-bottom: 2px;
+}
+
+.content {
+    width: 500px;
+    height: 320px;
+}
+
+.invisible {
+    display: none;
+}
