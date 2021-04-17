@@ -75,6 +75,9 @@ header {
 }
 
 .content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 500px;
     height: 320px;
 }
@@ -82,3 +85,48 @@ header {
 .invisible {
     display: none;
 }
+
+/* loading spinner */
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 5px solid white;
+    border-color: rgba(243,172,18,1) rgba(243,172,18,1) rgba(243,172,18,1) transparent;
+    animation: loading-spinner .7s ease-in-out infinite;
+}
+
+@keyframes loading-spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* charts */
+
+.chart {
+    position: absolute;
+    top: 200px;
+    left: 175px;
+}
+
+.progress-ring-circle {
+    outline: none;
+    stroke-width: 5;
+    transition: .3s stroke-dashoffset;
+    transform: rotate(135deg);
+    transform-origin: 50% 50%;
+}
+
+
+.FRAUD {stroke: rebeccapurple;}
+.INDECENT_CONTENT {stroke: red;}
+.FAKE_NEWS {stroke: yellow;}
+.VIRUS {stroke: black;}
+.RELIABLE {stroke: green;}
+.SAFE {stroke: greenyellow;}
+.NEUTRAL {stroke: blue;}
