@@ -6,16 +6,22 @@ body {
     overflow: hidden;
 }
 header {
+    position: fixed;
+    width: 500px;
     background: linear-gradient(58deg, rgba(241,196,15,1) 20%, rgba(243,172,18,1) 100%);
+    /*
+    background: linear-gradient(58deg, rgb(0, 172, 0) 20%, green 100%);
+    background: linear-gradient(58deg, rgb(255, 46, 46) 20%, red 100%);
+    background: linear-gradient(58deg, rgb(45, 45, 255) 20%, blue 100%);
+    */
     padding-bottom: 0;
+    transition: all .5s;
 }
-
 .top {
     padding: 10px;
     display: flex;
     justify-content: space-between;
 }
-
 .logo {
     font-size: large;
 }
@@ -38,14 +44,17 @@ header {
     text-decoration: none;
     color: cornsilk;
 }
-.profile-image {
-    flex: end;
-    display: inline-block;
-    width: auto;
+.image-cropper {
+    width: 30px;
     height: 30px;
+    overflow: hidden;
     border-radius: 50%;
 }
-
+.profile-image {
+    display: inline-block;
+    width: auto;
+    height: 100%;
+}
 .menu {
     display: flex;
     justify-content: space-between;
@@ -58,22 +67,18 @@ header {
     background: none;
     transition: 0.3s;
 }
-
 .button:hover {
     color: cornsilk;
 }
-
 .button:focus {
     border: none;
     outline: none;
 
     color: cornsilk;
 }
-
 .clicked {
     border-bottom: 2px;
 }
-
 .content {
     display: flex;
     align-items: center;
@@ -81,7 +86,6 @@ header {
     width: 500px;
     height: 320px;
 }
-
 .invisible {
     display: none;
 }
@@ -89,6 +93,7 @@ header {
 /* loading spinner */
 
 .loading-spinner {
+    margin-top: 150px;
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -107,22 +112,40 @@ header {
 }
 
 /* charts */
-
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+.charts { 
+    margin-top: 150px;
+    height: 200px;
+    width: 200px;
+    transition: 1s linear;
+    filter: drop-shadow( 3px 3px 20px rgba(0, 0, 0, .3));
+    animation: fadein .5s;
+}
 .chart {
     position: absolute;
-    top: 200px;
-    left: 175px;
+    transition: all 1s;
+    animation: fadein .5s;
 }
-
 .progress-ring-circle {
-    outline: none;
-    stroke-width: 5;
-    transition: .3s stroke-dashoffset;
-    transform: rotate(135deg);
+    stroke-width: 5px;
+    transition: 1s stroke-dashoffset ease-in-out;
+    transform: rotate(-90deg);
     transform-origin: 50% 50%;
+    stroke-linecap: round;  
 }
-
-
+#content p {
+    position: absolute;
+    color: black;
+    font-size: large;
+    font-weight: 500;
+    top: 90px;
+    left: 90px;
+    transition: 1s linear;
+    animation: fadein .5s;
+}
 .FRAUD {stroke: rebeccapurple;}
 .INDECENT_CONTENT {stroke: red;}
 .FAKE_NEWS {stroke: yellow;}
@@ -130,3 +153,8 @@ header {
 .RELIABLE {stroke: green;}
 .SAFE {stroke: greenyellow;}
 .NEUTRAL {stroke: blue;}
+.danger {stroke: red;}
+.warning {stroke: orange;}
+.caution {stroke: yellow;}
+.ok {stroke: green;}
+.grey {stroke: lightgrey;}
