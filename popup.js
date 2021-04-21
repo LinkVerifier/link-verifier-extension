@@ -8,7 +8,6 @@ chrome.runtime.sendMessage({type: 'popup'}, response => {
     body.appendChild(div);
 });
 
-const content = document.getElementById('content');
 const opinions = [
     {'FRAUD':'negative'},
     {'INDECENT_CONTENT':'negative'},
@@ -18,14 +17,15 @@ const opinions = [
     {'SAFE':'positive'},
     {'NEUTRAL': 'neutral'}
 ]
+
 const getOpinions = [
-    {'FRAUD':20},
-    {'INDECENT_CONTENT':20},
-    {'FAKE_NEWS':20},
-    {'VIRUS':20},
+    {'FRAUD':200},
+    {'INDECENT_CONTENT':210},
+    {'FAKE_NEWS':1},
+    {'VIRUS':100},
     {'RELIABLE':20},
-    {'SAFE':20},
-    {'NEUTRAL':20}
+    {'SAFE':10},
+    {'NEUTRAL':3000}
 ]
 
 document.getElementById('getStatsWindow').addEventListener("click",  () => getStatsWindow());
@@ -102,7 +102,7 @@ var createSpinner = () => {
 
 const circumference = 90 * 2 * Math.PI;
 
-var makeDoughtChart = (classSVG, classCircle, zIndex, parent, startValue) => {
+var makeDoughnutChart = (classSVG, classCircle, zIndex, parent, startValue) => {
 
     var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('class','chart ' + classSVG);
@@ -132,14 +132,14 @@ var createSimpleDoughnutChart = allOpinions => {
     var charts = document.createElement('div');
     charts.className = 'charts';
     content.appendChild(charts);
-    var doughtChartBackground = makeDoughtChart('grey', 'progress-ring-circle', 1, charts, 100);
-    var doughtChart = makeDoughtChart('warning', 'progress-ring-circle', 1, charts, 0);
+    var title = document.createElement('div');
+    var doughtChartBackground = makeDoughnutChart('grey', 'progress-ring-circle', 1, charts, 100);
+    var doughtChart = makeDoughnutChart('warning', 'progress-ring-circle', 1, charts, 0);
     var percent = (basicOpinions['positive'] / amuntOfReviews) * 100 | 0;
     animateCircle({
         circle: doughtChart.circle,
         percent: percent
     });
-    console.log(percent);
     setTimeout(() => {
         let className;
         if (percent < 35) className = 'danger';
@@ -150,68 +150,92 @@ var createSimpleDoughnutChart = allOpinions => {
         //console.log(document.getElementsByTagName('header'));
     }, 500);
     setTimeout(() => {
-        //doughtChartBackground.svg.style.left = '50px';
-        //doughtChart.svg.style.left = '50px';
-    }, 2000)
+        charts.style.top = '20px'
+        title.className = 'title';
+        title.innerHTML = 'STRONA POTENCJALNIE NIEBEZPIECZNA!';
+        content.appendChild(title);
+        setTimeout(() => title.style.top = '120px', 100);
+        setTimeout(() => {
+            charts.style.left = '50px';
+            createTable(allOpinions);
+        }, 1500);
+    }, 900);
 
     animateNumbers(percent, charts);
 }
 
-
-var createCircleSVG = allOpinions => {
-    var i = allOpinions.length;
-    const amuntOfReviews = countAllOpinions(getOpinions);
-    var shift = 0;
-    var charts = document.createElement('div');
-    charts.className = 'charts';
-    content.appendChild(charts);
-    allOpinions.forEach(opinion => {
-        console.log(opinion);
-        console.log(Object.keys(opinion)[0]);
-        var reviews = opinion[Object.keys(opinion)[0]]
-        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('class','chart ' + Object.keys(opinion)[0]);
-        svg.setAttribute('width','200');
-        svg.setAttribute('height','200');
-        svg.style.zIndex = i;
-
-        var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
-        circle.setAttribute('class','progress-ring-circle');
-        circle.setAttribute('stroke-width','10');
-        circle.setAttribute('fill','transparent');
-        circle.setAttribute('r','90');
-        circle.setAttribute('cx','100');
-        circle.setAttribute('cy','100');
-        circle.style.strokeDasharray = `${circumference} ${circumference}`
-        circle.style.strokeDashoffset = circumference;
-
-        svg.appendChild(circle);
-        charts.appendChild(svg);
-
-        animateCircle({
-            circle: circle,
-            amuntOfReviews: amuntOfReviews,
-            delay: opinions.length - i + 1,
-            currentReviews : reviews,
-            shift: shift
-        })
-        shift += reviews;
-        i--;
-        setTimeout(() => {
-            svg.style.left = '50px';
-        }, 2000)
-    });
-    animateNumbers(100);
+var translateKeysToPolish = key => {
+    switch (key) {
+        case 'FRAUD':return 'Oszustwo';
+        case 'INDECENT_CONTENT':return 'Nieprzyzwoite treści';
+        case 'FAKE_NEWS':return 'Fałszywe informacje';
+        case 'VIRUS':return 'Wirusy';
+        case 'RELIABLE':return 'Uczciwa';
+        case 'SAFE':return 'Bezpieczna';
+        case 'NEUTRAL':return 'Neutralna';
+        default: return '';
+    }
 }
+var createTable = allOpinions => {
+    let i = 0;
+    const amuntOfReviews = countAllOpinions(allOpinions);
+    var tableBox = document.createElement('div');
+    tableBox.className = 'table';
+    content.appendChild(tableBox);
+    var title = document.createElement('p');
+    title.innerHTML = 'Szczegółowe dane:'
+    tableBox.appendChild(title);
+    var table = document.createElement('table');
+    tableBox.appendChild(table);
+    allOpinions.forEach(opinion => {
+        var tr = document.createElement('tr');
+        var tdName = document.createElement('td');
+        var tdSVG = document.createElement('td');
+        var tdPercent = document.createElement('td');
+        tr.appendChild(tdName);
+        tr.appendChild(tdSVG);
+        tr.appendChild(tdPercent);
+
+        //console.log(opinion);
+        //console.log(Object.keys(opinion)[0]);
+
+        tdName.innerHTML = translateKeysToPolish(Object.keys(opinion)[0]);
+
+        var reviews = opinion[Object.keys(opinion)[0]]
+        var percent = (reviews / amuntOfReviews) * 100 | 0;
+
+        var line = document.createElement('div');
+        var lineBG = document.createElement('div');
+        lineBG.className = 'lineBG';
+        line.className = 'line ' + Object.keys(opinion)[0];
+        tdSVG.appendChild(lineBG);
+        tdSVG.appendChild(lineBG);
+        tdSVG.appendChild(line);
+        setTimeout(() => {
+            table.appendChild(tr);
+            animateLine({
+                percent: percent,
+                line: line
+            });
+            animateNumbers(percent, tdPercent);
+        }, i*100 + 300);
+        i++;
+    });
+}
+
+var animateLine = data => setTimeout(() => {
+    const x = data.percent * .65 + 5 | 0;
+    data.line.style.width = x+'px';
+},  100);
 
 var animateCircle = data => setTimeout(() => {
         const offset = circumference - data.percent / 100 * circumference;
         data.circle.style.strokeDashoffset = offset;
     },  100);
 
-var animateNumbers = (data, charts) => {
+var animateNumbers = (data, parent) => {
     var number = document.createElement('p');
-    charts.appendChild(number);
+    parent.appendChild(number);
     const animateDelayNumber = (currentNumber, data) => {
         number.innerHTML = currentNumber + '%';
         if(currentNumber < data) {
@@ -221,7 +245,4 @@ var animateNumbers = (data, charts) => {
         }
     }
     animateDelayNumber(0, data);
-    setTimeout(() => {
-        //number.style.left = '150px';
-    },  2000);
 }
