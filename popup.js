@@ -2,8 +2,8 @@ const SITE_URL = 'http://localhost:8081/'
 const API_URL = 'http://localhost:8080/'
 
 chrome.runtime.sendMessage({type: 'popup'}, response => {
-    if (response.token !== null && response.token !== undefined) createHeaderForNotLoggedIn();
-    else createHeaderForLoggedIn(response.data);
+    if (response.token !== null && response.token !== undefined) createHeaderForLoggedIn(response.user);
+    else createHeaderForNotLoggedIn();
 });
 
 const opinions = [
@@ -26,7 +26,30 @@ const getOpinions = [
     {'NEUTRAL':3000}
 ]
 
-const createHeaderForLoggedIn = () => {
+const createHeaderForLoggedIn = (user) => {
+    var header = document.getElementById('header');
+    var profile = document.createElement('div');
+    profile.className = 'profile'; 
+
+    var a = document.createElement('a');
+    a.href = SITE_URL + 'users/' + user.id;
+    a.innerHTML = user.username;
+    a.target = '_blank';
+    
+    var imageCropper = document.createElement('div');
+    imageCropper.className = 'image-cropper';
+    
+    var img = document.createElement('img');
+    img.className = 'profile-image';
+    img.src = user.profilePicture;
+
+    imageCropper.appendChild(img);
+    profile.appendChild(a);
+    profile.appendChild(imageCropper);
+    header.appendChild(profile);
+}
+
+const createHeaderForNotLoggedIn = () => {
     var header = document.getElementById('header');
     var login = document.createElement('div');
     login.className = 'login';
@@ -37,10 +60,6 @@ const createHeaderForLoggedIn = () => {
 
     login.appendChild(a);
     header.appendChild(login);
-}
-
-const createHeaderForNotLoggedIn = (user) => {
-    var header = document.getElementById('header');
 }
 
 document.getElementById('getStatsWindow').addEventListener("click", () => getStatsWindow());

@@ -36,13 +36,13 @@ header {
 .profile {
     display: flex;
 }
-.profile a {
+header a {
     font-size: 20px;
     padding-right: 10px;
     color: blanchedalmond;
     transition: 0.3s;
 }
-.profile a:hover {
+header a:hover {
     text-decoration: none;
     color: cornsilk;
 }
