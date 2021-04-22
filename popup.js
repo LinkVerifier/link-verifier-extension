@@ -59,15 +59,15 @@ document.getElementById('getOpinionsWindow').addEventListener("click", () => get
 document.getElementById('getRateWindow').addEventListener("click", () => getRateWindow());
 
 const countAllOpinions = allOpinions => {
-    return allOpinions.reduce((previousValue, currentValue, index, array) => {
-        previousValue += currentValue[Object.keys(currentValue)[0]];
+    return Object.values(allOpinions).reduce((previousValue, currentValue, index, array) => {
+        previousValue += currentValue;
         return previousValue;
     }, 0);
 }
 
 const countBasicOpinions = allOpinions => {
     return allOpinions.reduce((previousValue, currentValue, index, array) => {
-        opinions.forEach(element => {
+        typesOfOpinions.forEach(element => {
             if (Object.keys(element)[0] === Object.keys(currentValue)[0]) {
                 previousValue[element[Object.keys(element)[0]]] += currentValue[Object.keys(currentValue)[0]];
                 return previousValue;
@@ -158,9 +158,12 @@ var makeDoughnutChart = (classSVG, classCircle, zIndex, parent, startValue) => {
 }
 
 var createSimpleDoughnutChart = link => {
-    console.log(countOpinonsForEachCategory(link.comments));
+    const allOpinions = countOpinonsForEachCategory(link.comments);
+    console.log(allOpinions);
     const amuntOfReviews = countAllOpinions(allOpinions);
+    console.log(amuntOfReviews);
     const basicOpinions = countBasicOpinions(allOpinions);
+    console.log(basicOpinions);
     var charts = document.createElement('div');
     charts.className = 'charts';
     content.appendChild(charts);
@@ -208,6 +211,7 @@ var translateKeysToPolish = key => {
         default: return '';
     }
 }
+
 var createTable = allOpinions => {
     let i = 0;
     const amuntOfReviews = countAllOpinions(allOpinions);
