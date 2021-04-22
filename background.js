@@ -51,6 +51,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         // get stats
         else if (request.message == 'getStats') {
+            console.log(URL);
             fetch(API_URL + 'links', {
                 method: 'POST',
                 headers: {
