@@ -29,8 +29,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 }).then(response => {
                     return response.json()
                 }).then(data => {
-                    console.log('USER');
-                    console.log(data);
                     sendResponse({
                         token: token.token,
                         user: data

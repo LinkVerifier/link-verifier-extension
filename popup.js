@@ -1,10 +1,9 @@
+const SITE_URL = 'http://localhost:8081/'
+const API_URL = 'http://localhost:8080/'
+
 chrome.runtime.sendMessage({type: 'popup'}, response => {
-    console.log(response)
-    var body = document.body;
-    var div = document.createElement('div');
-    if (response.token !== null && response.token !== undefined) div.textContent = 'ZALOGOWANO!';
-    else div.textContent = 'WYLOGOWANO';
-    body.appendChild(div);
+    if (response.token !== null && response.token !== undefined) createHeaderForNotLoggedIn();
+    else createHeaderForLoggedIn(response.data);
 });
 
 const opinions = [
@@ -27,10 +26,21 @@ const getOpinions = [
     {'NEUTRAL':3000}
 ]
 
-const createHeaderForLoggedIn = () => {}
+const createHeaderForLoggedIn = () => {
+    var header = document.getElementById('header');
+    var login = document.createElement('div');
+    login.className = 'login';
+    var a = document.createElement('a');
+    a.href = SITE_URL + 'login';
+    a.innerHTML = 'Zaloguj się';
+    a.target = '_blank';
 
-const createHeaderForNotLoggedIn = () => {
+    login.appendChild(a);
+    header.appendChild(login);
+}
 
+const createHeaderForNotLoggedIn = (user) => {
+    var header = document.getElementById('header');
 }
 
 document.getElementById('getStatsWindow').addEventListener("click", () => getStatsWindow());
