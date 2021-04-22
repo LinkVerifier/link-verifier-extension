@@ -1,5 +1,6 @@
 const SITE_URL = 'http://localhost:8081/'
 const API_URL = 'http://localhost:8080/'
+const content = document.getElementById('content');
 
 chrome.runtime.sendMessage({type: 'popup', message: 'getUser'}, response => {
     if (response.token !== null && response.token !== undefined) createHeaderForLoggedIn(response.user);
@@ -59,8 +60,8 @@ document.getElementById('getOpinionsWindow').addEventListener("click", () => get
 document.getElementById('getRateWindow').addEventListener("click", () => getRateWindow());
 
 const countAllOpinions = allOpinions => {
-    return Object.values(allOpinions).reduce((previousValue, currentValue, index, array) => {
-        previousValue += currentValue;
+    return allOpinions.reduce((previousValue, currentValue, index, array) => {
+        previousValue += currentValue[Object.keys(currentValue)[0]];
         return previousValue;
     }, 0);
 }
@@ -89,10 +90,11 @@ const getMaxValue = opinions => {
 }
 
 const countOpinonsForEachCategory = comments => {
-    return comments.reduce((previousValue, currentValue, index, array) => {
+    comments = comments.reduce((previousValue, currentValue, index, array) => {
         previousValue[currentValue.opinion.name] = previousValue[currentValue.opinion.name] + 1;
         return previousValue;
     }, {'FRAUD':0,'INDECENT_CONTENT':0,'FAKE_NEWS':0,'VIRUS':0,'RELIABLE':0,'SAFE':0,'NEUTRAL':0});
+    return Object.keys(comments).map(e => ( {[e]: comments[e]} ));
 }
 
 const getStatsWindow = () => {
@@ -159,11 +161,8 @@ var makeDoughnutChart = (classSVG, classCircle, zIndex, parent, startValue) => {
 
 var createSimpleDoughnutChart = link => {
     const allOpinions = countOpinonsForEachCategory(link.comments);
-    console.log(allOpinions);
     const amuntOfReviews = countAllOpinions(allOpinions);
-    console.log(amuntOfReviews);
     const basicOpinions = countBasicOpinions(allOpinions);
-    console.log(basicOpinions);
     var charts = document.createElement('div');
     charts.className = 'charts';
     content.appendChild(charts);
@@ -231,9 +230,6 @@ var createTable = allOpinions => {
         tr.appendChild(tdName);
         tr.appendChild(tdSVG);
         tr.appendChild(tdPercent);
-
-        //console.log(opinion);
-        //console.log(Object.keys(opinion)[0]);
 
         tdName.innerHTML = translateKeysToPolish(Object.keys(opinion)[0]);
 
