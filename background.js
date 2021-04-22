@@ -1,6 +1,5 @@
 const API_URL = "http://localhost:8080/";
 var URL;
-
 // when tab is changed updates URL for popup.js
 chrome.tabs.onActivated.addListener(tab => {
     chrome.tabs.get(tab.tabId, currentTabInfo => {
@@ -8,23 +7,37 @@ chrome.tabs.onActivated.addListener(tab => {
         })
 })
 
-
 // listens messages from popup and content
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     // checks if sender is popup.js
     if (request.type === 'popup') {
-        fetch('https://reqres.in/api/users/1')
-            .then(res => res.json())
-            .then(data => {
-                chrome.storage.local.get(['user'], user => {
-                    console.log(user.user);
-                    sendResponse({
-                        user: user.user,
-                        message: data.data
-                    });
+        
+        // get user info
+        chrome.storage.local.get(['token'], token => {
+            if (token.token === null || token.token === undefined) {
+                sendResponse({
+                    token: null,
                 });
-            }).catch(error => console.log(error));
+            } else {
+                fetch(API_URL + 'users/get_user', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token.token,
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    return response.json()
+                }).then(data => {
+                    console.log('USER');
+                    console.log(data);
+                    sendResponse({
+                        token: token.token,
+                        user: data
+                    })
+                }).catch(error => console.log(error));
+            }
+        });
     }
 
     // checks if sender is content.js
@@ -51,7 +64,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     sendResponse({message: data});
                 }).catch(error => console.log(error));
             })
-            .catch(error => console.log(error))
+            .catch(error => console.log(error));
 
         });
     }

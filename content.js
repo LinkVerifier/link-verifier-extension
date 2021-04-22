@@ -1,4 +1,4 @@
-const DOMAIN = 'localhost:8801';
+const DOMAIN = 'localhost:8081';
 let currentURL;
 
 const sendURL = () => {
@@ -14,9 +14,9 @@ const sendURL = () => {
 }
 
 const updateUSER = () => {
-    if (window.localStorage.getItem('user') !== null 
-    && window.localStorage.getItem('user') !== undefined) chrome.storage.local.set({user: JSON.parse(window.localStorage.getItem('user'))});
-    else chrome.storage.local.set({user: null});
+    if (window.localStorage.getItem('token') !== null 
+    && window.localStorage.getItem('token') !== undefined) chrome.storage.local.set({token: window.localStorage.getItem('token')});
+    else chrome.storage.local.set({token: null});
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {

@@ -2,9 +2,8 @@ chrome.runtime.sendMessage({type: 'popup'}, response => {
     console.log(response)
     var body = document.body;
     var div = document.createElement('div');
-    console.log(response.user);
-    if (response.user !== null && response.user !== undefined) div.textContent = response.message.first_name +'\n'+ 'ZALOGOWANO!';
-    else div.textContent = response.message.first_name +'\n'+ 'WYLOGOWANO';
+    if (response.token !== null && response.token !== undefined) div.textContent = 'ZALOGOWANO!';
+    else div.textContent = 'WYLOGOWANO';
     body.appendChild(div);
 });
 
@@ -28,9 +27,15 @@ const getOpinions = [
     {'NEUTRAL':3000}
 ]
 
-document.getElementById('getStatsWindow').addEventListener("click",  () => getStatsWindow());
-document.getElementById('getOpinionsWindow').addEventListener("click",  () => getOpinionsWindow());
-document.getElementById('getRateWindow').addEventListener("click",  () => getRateWindow());
+const createHeaderForLoggedIn = () => {}
+
+const createHeaderForNotLoggedIn = () => {
+
+}
+
+document.getElementById('getStatsWindow').addEventListener("click", () => getStatsWindow());
+document.getElementById('getOpinionsWindow').addEventListener("click", () => getOpinionsWindow());
+document.getElementById('getRateWindow').addEventListener("click", () => getRateWindow());
 
 const countAllOpinions = allOpinions => {
     return allOpinions.reduce((previousValue, currentValue, index, array) => {
