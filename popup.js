@@ -1,7 +1,7 @@
 const SITE_URL = 'http://localhost:8081/'
 const API_URL = 'http://localhost:8080/'
 
-chrome.runtime.sendMessage({type: 'popup'}, response => {
+chrome.runtime.sendMessage({type: 'popup', message: 'getUser'}, response => {
     if (response.token !== null && response.token !== undefined) createHeaderForLoggedIn(response.user);
     else createHeaderForNotLoggedIn();
 });
@@ -26,7 +26,7 @@ const getOpinions = [
     {'NEUTRAL':3000}
 ]
 
-const createHeaderForLoggedIn = (user) => {
+const createHeaderForLoggedIn = user => {
     var header = document.getElementById('header');
     var profile = document.createElement('div');
     profile.className = 'profile'; 
@@ -47,6 +47,7 @@ const createHeaderForLoggedIn = (user) => {
     profile.appendChild(a);
     profile.appendChild(imageCropper);
     header.appendChild(profile);
+    getStatsWindow();
 }
 
 const createHeaderForNotLoggedIn = () => {
@@ -60,6 +61,7 @@ const createHeaderForNotLoggedIn = () => {
 
     login.appendChild(a);
     header.appendChild(login);
+    getStatsWindow();
 }
 
 document.getElementById('getStatsWindow').addEventListener("click", () => getStatsWindow());
@@ -96,6 +98,10 @@ const getMaxValue = opinions => {
     }, {a: 0});
 }
 
+const countOpinonsForEachCategory = comments => {
+
+}
+
 const getStatsWindow = () => {
     console.log('stats window');
     while (content.childNodes.length > 0) {
@@ -103,14 +109,12 @@ const getStatsWindow = () => {
     } 
     var spinner = createSpinner();
     content.appendChild(spinner);
-    setTimeout(() => {
+    chrome.runtime.sendMessage({type: 'popup', message: 'getStats'}, response => {
         while (content.childNodes.length > 0) {
             content.removeChild(content.lastChild);
-        }    
-        createSimpleDoughnutChart(getOpinions);
-    }, 1000);
-
-    return true;
+        }
+        createSimpleDoughnutChart(response.link);
+    });
 }
 
 const getOpinionsWindow = () => {
@@ -160,7 +164,8 @@ var makeDoughnutChart = (classSVG, classCircle, zIndex, parent, startValue) => {
     return {svg: svg, circle: circle};
 }
 
-var createSimpleDoughnutChart = allOpinions => {
+var createSimpleDoughnutChart = link => {
+
     const amuntOfReviews = countAllOpinions(allOpinions);
     const basicOpinions = countBasicOpinions(allOpinions);
     var charts = document.createElement('div');
