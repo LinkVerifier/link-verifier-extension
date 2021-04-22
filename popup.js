@@ -2,11 +2,6 @@ const SITE_URL = 'http://localhost:8081/'
 const API_URL = 'http://localhost:8080/'
 const content = document.getElementById('content');
 
-chrome.runtime.sendMessage({type: 'popup', message: 'getUser'}, response => {
-    if (response.token !== null && response.token !== undefined) createHeaderForLoggedIn(response.user);
-    else createHeaderForNotLoggedIn();
-});
-
 const typesOfOpinions = [
     {'FRAUD':'negative'},
     {'INDECENT_CONTENT':'negative'},
@@ -16,6 +11,11 @@ const typesOfOpinions = [
     {'SAFE':'positive'},
     {'NEUTRAL': 'neutral'}
 ]
+
+chrome.runtime.sendMessage({type: 'popup', message: 'getUser'}, response => {
+    if (response.token !== null && response.token !== undefined) createHeaderForLoggedIn(response.user);
+    else createHeaderForNotLoggedIn();
+});
 
 const createHeaderForLoggedIn = user => {
     var header = document.getElementById('header');
@@ -160,12 +160,15 @@ var makeDoughnutChart = (classSVG, classCircle, zIndex, parent, startValue) => {
 }
 
 var createSimpleDoughnutChart = link => {
+    var contentStats = document.createElement('div');
+    contentStats.className = 'content';
+    content.appendChild(contentStats);
     const allOpinions = countOpinonsForEachCategory(link.comments);
     const amuntOfReviews = countAllOpinions(allOpinions);
     const basicOpinions = countBasicOpinions(allOpinions);
     var charts = document.createElement('div');
     charts.className = 'charts';
-    content.appendChild(charts);
+    contentStats.appendChild(charts);
     var title = document.createElement('div');
     var doughtChartBackground = makeDoughnutChart('grey', 'progress-ring-circle', 1, charts, 100);
     var doughtChart = makeDoughnutChart('warning', 'progress-ring-circle', 1, charts, 0);
@@ -187,11 +190,11 @@ var createSimpleDoughnutChart = link => {
         charts.style.top = '20px'
         title.className = 'title';
         title.innerHTML = 'STRONA POTENCJALNIE NIEBEZPIECZNA!';
-        content.appendChild(title);
+        contentStats.appendChild(title);
         setTimeout(() => title.style.top = '120px', 100);
         setTimeout(() => {
             charts.style.left = '50px';
-            createTable(allOpinions);
+            createTable(allOpinions, contentStats);
         }, 1500);
     }, 900);
 
@@ -211,12 +214,12 @@ var translateKeysToPolish = key => {
     }
 }
 
-var createTable = allOpinions => {
+var createTable = (allOpinions, contentStats) => {
     let i = 0;
     const amuntOfReviews = countAllOpinions(allOpinions);
     var tableBox = document.createElement('div');
     tableBox.className = 'table';
-    content.appendChild(tableBox);
+    contentStats.appendChild(tableBox);
     var title = document.createElement('p');
     title.innerHTML = 'Szczegółowe dane:'
     tableBox.appendChild(title);
