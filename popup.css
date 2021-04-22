@@ -167,7 +167,7 @@ header a:hover {
 /* TITLE */ 
 .title {
     position: absolute;
-    top: 130px;
+    top: 100px;
     font-size: large;
     animation: fadein .5s;
     transition: 1s linear;
@@ -228,8 +228,26 @@ tr {
 .RELIABLE {background-color: #00c851;}
 .SAFE {background-color: #007e33;}
 .NEUTRAL {background-color: #33b5e5;}
-.danger {stroke: red;}
-.warning {stroke: orange;}
-.caution {stroke: yellow;}
-.ok {stroke: green;}
+.danger {
+    stroke: red;
+    color: red;
+}
+.warning {
+    stroke: orange;
+    color: orange;
+}
+.caution {
+    stroke: yellow;
+    color: yellow;
+}
+.ok {
+    stroke: green;
+    color: green;
+}
 .grey {stroke: lightgrey;}
+
+.bi {
+    margin-left: 20px;
+    padding-bottom: 40px;
+    font-size: 50px;
+}
