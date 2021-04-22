@@ -6,7 +6,7 @@ chrome.runtime.sendMessage({type: 'popup', message: 'getUser'}, response => {
     else createHeaderForNotLoggedIn();
 });
 
-const opinions = [
+const typesOfOpinions = [
     {'FRAUD':'negative'},
     {'INDECENT_CONTENT':'negative'},
     {'FAKE_NEWS':'negative'},
@@ -14,16 +14,6 @@ const opinions = [
     {'RELIABLE':'positive'},
     {'SAFE':'positive'},
     {'NEUTRAL': 'neutral'}
-]
-
-const getOpinions = [
-    {'FRAUD':200},
-    {'INDECENT_CONTENT':210},
-    {'FAKE_NEWS':1},
-    {'VIRUS':100},
-    {'RELIABLE':20},
-    {'SAFE':10},
-    {'NEUTRAL':3000}
 ]
 
 const createHeaderForLoggedIn = user => {
@@ -99,7 +89,10 @@ const getMaxValue = opinions => {
 }
 
 const countOpinonsForEachCategory = comments => {
-
+    return comments.reduce((previousValue, currentValue, index, array) => {
+        previousValue[currentValue.opinion.name] = previousValue[currentValue.opinion.name] + 1;
+        return previousValue;
+    }, {'FRAUD':0,'INDECENT_CONTENT':0,'FAKE_NEWS':0,'VIRUS':0,'RELIABLE':0,'SAFE':0,'NEUTRAL':0});
 }
 
 const getStatsWindow = () => {
@@ -165,7 +158,7 @@ var makeDoughnutChart = (classSVG, classCircle, zIndex, parent, startValue) => {
 }
 
 var createSimpleDoughnutChart = link => {
-
+    console.log(countOpinonsForEachCategory(link.comments));
     const amuntOfReviews = countAllOpinions(allOpinions);
     const basicOpinions = countBasicOpinions(allOpinions);
     var charts = document.createElement('div');
