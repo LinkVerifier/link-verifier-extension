@@ -67,7 +67,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 fetch(API_URL + 'links/' + id)
                 .then(res => res.json())
                 .then(data => {
-                    sendResponse({link: data});
+                    sendResponse({link: data, id: id});
                 }).catch(error => console.log(error));
             }).catch(error => console.log(error));
         } 

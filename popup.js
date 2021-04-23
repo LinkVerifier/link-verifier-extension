@@ -117,6 +117,7 @@ const getStatsWindow = () => {
             var title = document.createElement('div');
             var title2 = document.createElement('div');
             var i = document.createElement('i');
+            
             contentStats.className = 'content';
             title.className = 'title';
             title2.className = 'title';
@@ -128,6 +129,7 @@ const getStatsWindow = () => {
             title2.style.fontSize = 'small';
             title.innerHTML = 'Wystąpił błąd, spróbuj ponownie poźniej...';
             title2.innerHTML = 'Nasza usługa nie obsługuje domen lokalnych, sprawdź czy na takiej się nie znajdujesz.';
+            
             contentStats.appendChild(i);
             contentStats.appendChild(title);
             contentStats.appendChild(title2);
@@ -135,10 +137,25 @@ const getStatsWindow = () => {
         } else if (response.link.comments === null || response.link.comments === []) {
             var contentStats = document.createElement('div');
             var title = document.createElement('div');
+            var a = document.createElement('a');
+            var i = document.createElement('i');
+            
             contentStats.className = 'content';
             title.className = 'title';
-            title.innerHTML = 'nie ma opinii';
+            a.className = 'title';
+            i.className = 'bi bi-info-circle grey';
+            title.style.top = '150px';
+            title.style.padding = '60px';
+            a.style.top = '250px';
+            a.style.fontSize = 'small';
+            a.href = 'http://localhost:8081/links/' + response.id;
+            a.target = '_blank';
+            title.innerHTML = 'Strona aktualnie nie posiada, żadnych opinii.';
+            a.innerHTML = 'Bądź pierwszą osobą, która wystawi opinię!';
+            
+            contentStats.appendChild(i);
             contentStats.appendChild(title);
+            contentStats.appendChild(a);
             content.appendChild(contentStats);
         } else {
             createSimpleDoughnutChart(response.link);  

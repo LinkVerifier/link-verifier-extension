@@ -230,6 +230,7 @@ tr {
 .RELIABLE {background-color: #00c851;}
 .SAFE {background-color: #007e33;}
 .NEUTRAL {background-color: #33b5e5;}
+
 .danger {
     stroke: red;
     color: red;
@@ -246,7 +247,10 @@ tr {
     stroke: green;
     color: green;
 }
-.grey {stroke: lightgrey;}
+.grey {
+    stroke: lightgrey;
+    color: #33b5e5;
+}
 
 .bi {
     margin-left: 20px;
