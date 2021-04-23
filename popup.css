@@ -109,14 +109,16 @@ header a:hover {
     border-radius: 50%;
     border: 5px solid white;
     border-color: rgba(243,172,18,1) rgba(243,172,18,1) rgba(243,172,18,1) transparent;
-    animation: loading-spinner .7s ease-in-out infinite;
+    animation: loading-spinner .5s ease-in-out infinite;
 }
 
 @keyframes loading-spinner {
     0% {
+        opacity: 0; 
         transform: rotate(0deg);
     }
     100% {
+        opacity: 1;
         transform: rotate(360deg);
     }
 }

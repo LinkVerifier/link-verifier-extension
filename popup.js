@@ -30,9 +30,9 @@ chrome.runtime.sendMessage({type: 'popup', message: 'getUser'}, response => {
     else createHeaderForNotLoggedIn();
 });
 
-document.getElementById('getStatsWindow').addEventListener("click", () => getStatsWindow());
-document.getElementById('getOpinionsWindow').addEventListener("click", () => getOpinionsWindow());
-document.getElementById('getRateWindow').addEventListener("click", () => getRateWindow());
+document.getElementById('getStatsWindow').addEventListener('click', () => getStatsWindow());
+document.getElementById('getOpinionsWindow').addEventListener('click', () => getOpinionsWindow());
+document.getElementById('getRateWindow').addEventListener('click', () => getRateWindow());
 
 /*
   _     _ _______ _______ ______  _______  ______
@@ -112,12 +112,34 @@ const getStatsWindow = () => {
         while (content.childNodes.length > 0) {
             content.removeChild(content.lastChild);
         }
-        console.log(response);
-        console.log(response.link.error);
         if (response.link.error) {
-
+            var contentStats = document.createElement('div');
+            var title = document.createElement('div');
+            var title2 = document.createElement('div');
+            var i = document.createElement('i');
+            contentStats.className = 'content';
+            title.className = 'title';
+            title2.className = 'title';
+            i.className = 'bi bi-x-circle danger';
+            title.style.top = '130px';
+            title.style.padding = '80px';
+            title2.style.top = '170px';
+            title2.style.padding = '80px';
+            title2.style.fontSize = 'small';
+            title.innerHTML = 'Wystąpił błąd, spróbuj ponownie poźniej...';
+            title2.innerHTML = 'Nasza usługa nie obsługuje domen lokalnych, sprawdź czy na takiej się nie znajdujesz.';
+            contentStats.appendChild(i);
+            contentStats.appendChild(title);
+            contentStats.appendChild(title2);
+            content.appendChild(contentStats);
         } else if (response.link.comments === null || response.link.comments === []) {
-            console.log(response.link);
+            var contentStats = document.createElement('div');
+            var title = document.createElement('div');
+            contentStats.className = 'content';
+            title.className = 'title';
+            title.innerHTML = 'nie ma opinii';
+            contentStats.appendChild(title);
+            content.appendChild(contentStats);
         } else {
             createSimpleDoughnutChart(response.link);  
         }
@@ -174,26 +196,23 @@ var createSimpleDoughnutChart = link => {
     });
     setTimeout(() => {
         let className;
+        title.className = 'title';
         if (percent < 35) {
-            title.className = 'title';
             title.innerHTML = 'Uwaga! Strona niebezpieczna, zachowaj ostrożność!';
             i.className = 'bi bi-exclamation-triangle-fill danger';
             className = 'danger';
         }
         else if (percent < 50) {
-            title.className = 'title';
             title.innerHTML = 'Strona niebezpieczna, zachowaj ostrożność!';
             i.className = 'bi bi-exclamation-triangle warning';
             className ='warning';
         }
         else if (percent < 75) {
-            title.className = 'title';
             title.innerHTML = 'Zachowaj ostrożność';
             i.className = 'bi bi-exclamation-circle caution';
             className = 'caution';
         }       
         else {
-            title.className = 'title';
             title.innerHTML = 'Strona bezpieczna';
             i.className = 'bi bi-check-circle ok';
             className = 'ok';
