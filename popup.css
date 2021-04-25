@@ -222,6 +222,19 @@ tr {
     text-align: right;
 }
 
+.content .opinion {
+    padding: 5px;
+    margin: 10px;
+    border-radius: 20px;
+}
+
+.opinion-box {
+    position: absolute;
+    top: 230px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .FRAUD {background-color: #ff4444;}
 .INDECENT_CONTENT {background-color: red;}

@@ -134,7 +134,7 @@ const getStatsWindow = () => {
             contentStats.appendChild(title);
             contentStats.appendChild(title2);
             content.appendChild(contentStats);
-        } else if (response.link.comments === null || response.link.comments === []) {
+        } else if (response.link.comments === null || response.link.comments === [] || response.link.comments.length === 0) {
             var contentStats = document.createElement('div');
             var title = document.createElement('div');
             var a = document.createElement('a');
@@ -344,9 +344,65 @@ const getOpinionsWindow = () => {
 
 const getRateWindow = () => {
     console.log('rate window')
-    while (content.firstChild) {
+    while (content.childNodes.length > 0) {
         content.removeChild(content.lastChild);
-    }
+    } 
+    var spinner = createSpinner();
+    content.appendChild(spinner);
+    chrome.runtime.sendMessage({type: 'popup', message: 'getStats'}, response => {
+        while (content.childNodes.length > 0) {
+            content.removeChild(content.lastChild);
+        }
+        if (response.link.error) {
+            var contentStats = document.createElement('div');
+            var title = document.createElement('div');
+            var i = document.createElement('i');
+            
+            contentStats.className = 'content';
+            title.className = 'title';
+            i.className = 'bi bi-x-circle danger';
+            title.style.top = '130px';
+            title.style.padding = '80px';
+            title.innerHTML = 'Wystąpił błąd, spróbuj ponownie poźniej...';
+
+            contentStats.appendChild(i);
+            contentStats.appendChild(title);
+            content.appendChild(contentStats);
+        } else {
+            createRateWindow(response.link.linkName);  
+        }
+    });
+}
+
+const createRateWindow = link => {
+    var contentRates = document.createElement('div');
+    var title = document.createElement('div');
+    var neutral = document.createElement('div');
+    var positive = document.createElement('div');
+    var negative = document.createElement('div');
+
+    title.className = 'title';
+    contentRates.className = 'content';
+    neutral.className = positive.className = negative.className = 'opinion-box';
+
+    title.innerHTML = 'Dodaj opinię dla strony ' + link + '.';
+
+    content.appendChild(contentRates);
+    contentRates.appendChild(neutral);
+    contentRates.appendChild(positive);
+    contentRates.appendChild(negative);
+    typesOfOpinions.forEach(opinion => {
+        var op = document.createElement('div');
+        op.className = Object.keys(opinion)[0] + ' opinion';
+        op.innerHTML = translateKeysToPolish(Object.keys(opinion)[0]);
+        op.id = Object.keys(opinion)[0];
+        op.style.cursor = 'pointer';
+        console.log(opinion[Object.keys(opinion)[0]]);
+        if (opinion[Object.keys(opinion)[0]] === 'neutral') neutral.appendChild(op);
+        if (opinion[Object.keys(opinion)[0]] === 'positive') positive.appendChild(op);
+        if (opinion[Object.keys(opinion)[0]] === 'negative') negative.appendChild(op);
+    });
+    contentRates.appendChild(title);
 }
 
 /*
@@ -390,6 +446,6 @@ const countOpinonsForEachCategory = comments => {
     comments = comments.reduce((previousValue, currentValue, index, array) => {
         previousValue[currentValue.opinion.name] = previousValue[currentValue.opinion.name] + 1;
         return previousValue;
-    }, {'FRAUD':0,'INDECENT_CONTENT':0,'FAKE_NEWS':0,'VIRUS':0,'RELIABLE':0,'SAFE':0,'NEUTRAL':0});
+    }, {'NEUTRAL':0,'SAFE':0,'RELIABLE':0,'FRAUD':0,'INDECENT_CONTENT':0,'FAKE_NEWS':0,'VIRUS':0});
     return Object.keys(comments).map(e => ( {[e]: comments[e]} ));
 }
