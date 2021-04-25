@@ -69,7 +69,7 @@ const createHeaderForLoggedIn = user => {
     a.target = '_blank';
     imageCropper.className = 'image-cropper';
     img.className = 'profile-image';
-    img.src = user.profilePicture;
+    img.src = 'data:'+user.profilePicture.type+';base64,'+user.profilePicture.data;
 
     imageCropper.appendChild(img);
     profile.appendChild(a);
@@ -199,7 +199,7 @@ var createSimpleDoughnutChart = link => {
     var title = document.createElement('div');
     var doughtChartBackground = makeDoughnutChart('grey', 'progress-ring-circle', 1, charts, 100);
     var doughtChart = makeDoughnutChart('warning', 'progress-ring-circle', 1, charts, 0);
-    var percent = (basicOpinions['positive'] / amuntOfReviews) * 100 | 0;
+    var percent = (basicOpinions.positive / (amuntOfReviews - basicOpinions.neutral)) * 100 | 0;
     var i = document.createElement('i'); 
     contentStats.className = 'content';
     charts.className = 'charts';
