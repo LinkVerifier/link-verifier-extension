@@ -9,7 +9,7 @@ const typesOfOpinions = [
     {'VIRUS':'negative'},
     {'RELIABLE':'positive'},
     {'SAFE':'positive'},
-    {'NEUTRAL': 'neutral'}
+    {'NEUTRAL': 'neutral'},
 ]
 
 const translateKeysToPolish = key => {
@@ -346,7 +346,8 @@ const getRateWindow = () => {
     console.log('rate window')
     while (content.childNodes.length > 0) {
         content.removeChild(content.lastChild);
-    } 
+    }
+
     var spinner = createSpinner();
     content.appendChild(spinner);
     chrome.runtime.sendMessage({type: 'popup', message: 'getStats'}, response => {
@@ -375,34 +376,38 @@ const getRateWindow = () => {
 }
 
 const createRateWindow = link => {
-    var contentRates = document.createElement('div');
-    var title = document.createElement('div');
-    var neutral = document.createElement('div');
-    var positive = document.createElement('div');
-    var negative = document.createElement('div');
+    var opinionBox = document.createElement('div');
+    var opinionGrid = document.createElement('div');
+    var titleTop = document.createElement('h1');
+    var titleBot = document.createElement('h1');
+    var a = document.createElement('a');
+    var hr = document.createElement('hr');
 
-    title.className = 'title';
-    contentRates.className = 'content';
-    neutral.className = positive.className = negative.className = 'opinion-box';
+    opinionGrid.className = 'opinions-grid';
+    opinionBox.className = 'opinion-box';
 
-    title.innerHTML = 'Dodaj opinię dla strony ' + link + '.';
+    titleTop.innerHTML = 'Dodaj szybką opinię';
+    titleBot.innerHTML = 'Możesz również dodać pełną opinię ';
+    a.innerHTML = 'tutaj';
+    a.href = SITE_URL + link;
 
-    content.appendChild(contentRates);
-    contentRates.appendChild(neutral);
-    contentRates.appendChild(positive);
-    contentRates.appendChild(negative);
+    content.appendChild(opinionBox);
+    
+
     typesOfOpinions.forEach(opinion => {
         var op = document.createElement('div');
-        op.className = Object.keys(opinion)[0] + ' opinion';
+        op.className = Object.keys(opinion)[0].toLowerCase() + ' item';
         op.innerHTML = translateKeysToPolish(Object.keys(opinion)[0]);
-        op.id = Object.keys(opinion)[0];
-        op.style.cursor = 'pointer';
+        op.id = Object.keys(opinion)[0].toLowerCase();
         console.log(opinion[Object.keys(opinion)[0]]);
-        if (opinion[Object.keys(opinion)[0]] === 'neutral') neutral.appendChild(op);
-        if (opinion[Object.keys(opinion)[0]] === 'positive') positive.appendChild(op);
-        if (opinion[Object.keys(opinion)[0]] === 'negative') negative.appendChild(op);
+        opinionGrid.appendChild(op);
     });
-    contentRates.appendChild(title);
+    opinionBox.appendChild(titleTop);
+    opinionBox.appendChild(hr);
+    opinionBox.appendChild(opinionGrid);
+    titleBot.appendChild(a);
+    opinionBox.appendChild(hr);
+    opinionBox.appendChild(titleBot);
 }
 
 /*
