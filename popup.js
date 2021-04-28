@@ -370,7 +370,7 @@ const getRateWindow = () => {
             contentStats.appendChild(title);
             content.appendChild(contentStats);
         } else {
-            createRateWindow(response.link.linkName);  
+            createRateWindow(response.id);  
         }
     });
 }
@@ -389,7 +389,8 @@ const createRateWindow = link => {
     titleTop.innerHTML = 'Dodaj szybką opinię';
     titleBot.innerHTML = 'Możesz również dodać pełną opinię ';
     a.innerHTML = 'tutaj';
-    a.href = SITE_URL + link;
+    a.href = SITE_URL + 'links/' + link;
+    a.target = '_blank';
 
     content.appendChild(opinionBox);
     
@@ -399,7 +400,7 @@ const createRateWindow = link => {
         op.className = Object.keys(opinion)[0].toLowerCase() + ' item';
         op.innerHTML = translateKeysToPolish(Object.keys(opinion)[0]);
         op.id = Object.keys(opinion)[0].toLowerCase();
-        console.log(opinion[Object.keys(opinion)[0]]);
+        op.addEventListener('click', () => sendOpinion(Object.keys(opinion)[0], link));
         opinionGrid.appendChild(op);
     });
     opinionBox.appendChild(titleTop);
@@ -408,6 +409,17 @@ const createRateWindow = link => {
     titleBot.appendChild(a);
     opinionBox.appendChild(hr);
     opinionBox.appendChild(titleBot);
+}
+
+const sendOpinion = (opinion, link) => {
+    chrome.runtime.sendMessage({
+        type: 'popup', 
+        message: 'addOpinion', 
+        opinion: opinion,
+        id: link
+    }, response => {
+        console.log(response);
+    });
 }
 
 /*

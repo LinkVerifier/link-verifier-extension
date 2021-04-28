@@ -4,7 +4,7 @@ var URL;
 // when tab is changed updates URL for popup.js
 chrome.tabs.onActivated.addListener(tab => {
     chrome.tabs.get(tab.tabId, currentTabInfo => {
-            URL = currentTabInfo.url;
+            if(currentTabInfo.url) URL = currentTabInfo.url;
         })
 });
 
@@ -71,13 +71,38 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 }).catch(error => console.log(error));
             }).catch(error => console.log(error));
         } 
-        
+
+        else if (request.message == 'addOpinion') {
+            console.log(request.opinion);
+            chrome.storage.local.get(['token'], token => {
+                if (token.token === null || token.token === undefined) {
+                    sendResponse({
+                        token: null,
+                    });
+                } else {
+                    fetch(API_URL + 'links/' + request.id + '/comments', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token.token
+                        },
+                        body: JSON.stringify({
+                            "opinion": request.opinion,
+                            "date": Date.now(),
+                            "comment": ''
+                        })
+                    }).then(res => res.json())
+                    .then(data => sendResponse(data))
+                    .catch(error => console.log(error));
+                }
+            })
+        }
     }
 
     // checks if sender is content.js
     if (request.type === 'content') {
         chrome.tabs.query({currentWindow: true, active: true}, tabs => {
-            URL = request.url;
+            if(URL) URL = request.url;
             // send request to serwer
             fetch(API_URL + 'links', {
                 method: 'POST',
