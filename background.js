@@ -1,10 +1,9 @@
 const API_URL = "http://localhost:8080/";
-var URL;
 
 // when tab is changed updates URL for popup.js
 chrome.tabs.onActivated.addListener(tab => {
     chrome.tabs.get(tab.tabId, currentTabInfo => {
-            if(currentTabInfo.url) URL = currentTabInfo.url;
+            if(currentTabInfo.url) chrome.storage.local.set({URL: currentTabInfo.url});
         })
 });
 
@@ -51,25 +50,27 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         // get stats
         else if (request.message == 'getStats') {
-            console.log(URL);
-            fetch(API_URL + 'links', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "linkName": URL,
-                    "deliveryDate": Date.now()
-                })
-            }).then(res => { 
-                return res.text();
-            }).then(id => {
-                fetch(API_URL + 'links/' + id)
-                .then(res => res.json())
-                .then(data => {
-                    sendResponse({link: data, id: id});
+            chrome.storage.local.get(['URL'], url => {
+                console.log(url.URL);
+                fetch(API_URL + 'links', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "linkName": url.URL,
+                        "deliveryDate": Date.now()
+                    })
+                }).then(res => { 
+                    return res.text();
+                }).then(id => {
+                    fetch(API_URL + 'links/' + id)
+                    .then(res => res.json())
+                    .then(data => {
+                        sendResponse({link: data, id: id});
+                    }).catch(error => console.log(error));
                 }).catch(error => console.log(error));
-            }).catch(error => console.log(error));
+            })
         } 
 
         else if (request.message == 'addOpinion') {
@@ -102,7 +103,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // checks if sender is content.js
     if (request.type === 'content') {
         chrome.tabs.query({currentWindow: true, active: true}, tabs => {
-            if(URL) URL = request.url;
+            if(request.url) chrome.storage.local.set({URL: request.url});
             // send request to serwer
             fetch(API_URL + 'links', {
                 method: 'POST',
