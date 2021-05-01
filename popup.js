@@ -333,6 +333,130 @@ const getOpinionsWindow = () => {
     while (content.firstChild) {
         content.removeChild(content.lastChild);
     }
+    var spinner = createSpinner();
+    content.appendChild(spinner);
+    chrome.runtime.sendMessage({type: 'popup', message: 'getStats'}, response => {
+        while (content.childNodes.length > 0) {
+            content.removeChild(content.lastChild);
+        }
+        if (response.link.error) {
+            var contentStats = document.createElement('div');
+            var title = document.createElement('div');
+            var i = document.createElement('i');
+            
+            contentStats.className = 'content';
+            title.className = 'title';
+            i.className = 'bi bi-x-circle danger';
+            title.style.top = '130px';
+            title.style.padding = '80px';
+            title.innerHTML = 'Wystąpił błąd, spróbuj ponownie poźniej...';
+
+            contentStats.appendChild(i);
+            contentStats.appendChild(title);
+            content.appendChild(contentStats);
+        } else if (response.link.comments === null || response.link.comments === [] || response.link.comments.length === 0) {
+            var contentStats = document.createElement('div');
+            var title = document.createElement('div');
+            var a = document.createElement('a');
+            var i = document.createElement('i');
+            
+            contentStats.className = 'content';
+            title.className = 'title';
+            a.className = 'title';
+            i.className = 'bi bi-info-circle grey';
+            title.style.top = '150px';
+            title.style.padding = '60px';
+            a.style.top = '250px';
+            a.style.fontSize = 'small';
+            a.href = 'http://localhost:8081/links/' + response.id;
+            a.target = '_blank';
+            title.innerHTML = 'Strona aktualnie nie posiada, żadnych opinii.';
+            a.innerHTML = 'Bądź pierwszą osobą, która wystawi opinię!';
+            
+            contentStats.appendChild(i);
+            contentStats.appendChild(title);
+            contentStats.appendChild(a);
+            content.appendChild(contentStats);
+        } else {
+            createCommentsWindow(response.link.comments)
+        }
+    });
+
+    const createCommentsWindow = comments => {
+        var contentOpinions = document.createElement('div');
+        contentOpinions.className = 'content-opinions';
+        comments.forEach(comment => {
+            chrome.runtime.sendMessage({type: 'popup', message: 'getUserById', id: comment.userId}, response => {
+                contentOpinions.appendChild(createComment(comment, response.user));
+            });
+        });
+        content.appendChild(contentOpinions);
+    }
+
+    const createComment = (comment, user) => {
+        var opinion = document.createElement('div');
+        var aImage = document.createElement('a');
+        var imageCropper = document.createElement('div');
+        var profilePicture = document.createElement('img');
+        var opinionContent = document.createElement('div');
+        var a = document.createElement('a');
+        var h2 = document.createElement('h2');
+        var data = document.createElement('div');
+        var date = document.createElement('div');
+        var pDate = document.createElement('p');
+        var iDate = document.createElement('i');
+        var likes = document.createElement('div');
+        var pLikes = document.createElement('p');
+        var iLikes = document.createElement('i');
+        var dislikes = document.createElement('div');
+        var pDislikes = document.createElement('p');
+        var iDislikes = document.createElement('i');
+        var opinionType = document.createElement('div');
+
+        opinion.className = 'opinion';
+        imageCropper.className = 'image-cropper';
+        profilePicture.className = 'profile-image';
+        opinionContent.className = 'opinion-content';
+        data.className = 'data';
+        date.className = 'date';
+        iDate.className = 'bi bi-clock';
+        likes.className = 'likes';
+        iLikes.className = 'bi bi-hand-thumbs-up';
+        dislikes.className = 'dislikes';
+        iDislikes.className = 'bi bi-hand-thumbs-down';
+        opinionType.className = 'opinion-type ' + comment.opinion.name.toLowerCase();
+
+        profilePicture.src = 'data:'+user.profilePicture.type+';base64,'+user.profilePicture.data;
+        aImage.href = SITE_URL + 'users/' + user.id;
+        aImage.target = '_blank';
+        a.href = SITE_URL + 'users/' + user.id;
+        a.target = '_blank';
+        a.innerHTML = user.username;
+        h2.innerHTML = comment.comment;
+        pDate.innerHTML = comment.creationDate.substring(8,10) + '.' + comment.creationDate.substring(5,7) + '.' + comment.creationDate.substring(0,4);
+        pLikes.innerHTML = comment.usersWhoLike.length;
+        pDislikes.innerHTML = comment.usersWhoDislike.length;
+        opinionType.innerHTML = translateKeysToPolish(comment.opinion.name);
+        
+        date.appendChild(iDate);
+        date.appendChild(pDate);
+        likes.appendChild(iLikes);
+        likes.appendChild(pLikes);
+        dislikes.appendChild(iDislikes);
+        dislikes.appendChild(pDislikes);
+        data.appendChild(date);
+        data.appendChild(likes);
+        data.appendChild(dislikes);
+        imageCropper.appendChild(profilePicture);
+        aImage.appendChild(imageCropper);
+        opinionContent.appendChild(a);
+        opinionContent.appendChild(h2);
+        opinionContent.appendChild(data);
+        opinion.appendChild(aImage);
+        opinion.appendChild(opinionContent);
+        opinion.appendChild(opinionType);
+        return opinion;
+    }
 }
 
 /*

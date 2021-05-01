@@ -234,7 +234,7 @@ tr {
 .content-opinions .opinion {
     padding: 10px;
     display: grid;
-    grid-template-columns: 70px 260px 150px;
+    grid-template-columns: 70px 250px 160px;
 }
 
 .content-opinions .opinion .image-cropper {
@@ -259,7 +259,8 @@ tr {
     font-weight: normal;
 }
 .content-opinions .opinion .opinion-content i {
-    margin: 3px;
+    margin: 0;
+    margin-right: 5px;
     font-size: small;
     font-weight: bold;
 }
@@ -280,6 +281,7 @@ tr {
 
 .content-opinions .opinion .opinion-content .likes {
     display: flex;
+    margin-right: 10px;
 }
 
 .content-opinions .opinion .opinion-content .dislikes {

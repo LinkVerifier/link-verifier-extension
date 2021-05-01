@@ -73,6 +73,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             })
         } 
 
+        // get user by ID
+        else if (request.message == 'getUserById') {
+            fetch(API_URL + 'users/' + request.id)
+            .then(res => res.json())
+            .then(data => {
+                sendResponse({user: data});
+            }).catch(error => console.log(error));
+        }
+
+        // add opinion
         else if (request.message == 'addOpinion') {
             console.log(request.opinion);
             chrome.storage.local.get(['token'], token => {
