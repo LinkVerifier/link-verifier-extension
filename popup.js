@@ -1,6 +1,7 @@
 const SITE_URL = 'http://localhost:8081/'
 const API_URL = 'http://localhost:8080/'
 const content = document.getElementById('content');
+let USER_ID = null;
 
 const typesOfOpinions = [
     {'FRAUD':'negative'},
@@ -45,6 +46,8 @@ const createHeaderForNotLoggedIn = () => {
     var header = document.getElementById('header');
     var login = document.createElement('div');
     var a = document.createElement('a');
+    
+    document.getElementById('getRateWindow').remove();
 
     login.className = 'login';
     a.href = SITE_URL + 'login';
@@ -62,9 +65,9 @@ const createHeaderForLoggedIn = user => {
     var a = document.createElement('a');
     var imageCropper = document.createElement('div');
     var img = document.createElement('img');
-
+    USER_ID = user.id;
     profile.className = 'profile'; 
-    a.href = SITE_URL + 'users/' + user.id;
+    a.href = SITE_URL + 'users/' + USER_ID;
     a.innerHTML = user.username;
     a.target = '_blank';
     imageCropper.className = 'image-cropper';
@@ -424,6 +427,8 @@ const getOpinionsWindow = () => {
         iLikes.className = 'bi bi-hand-thumbs-up';
         dislikes.className = 'dislikes';
         iDislikes.className = 'bi bi-hand-thumbs-down';
+        if (comment.usersWhoLike.includes(USER_ID)) iLikes.className = 'bi bi-hand-thumbs-up-fill like';
+        if (comment.usersWhoDislike.includes(USER_ID)) iDislikes.className = 'bi bi-hand-thumbs-down-fill dislike';
         opinionType.className = 'opinion-type ' + comment.opinion.name.toLowerCase();
 
         profilePicture.src = 'data:'+user.profilePicture.type+';base64,'+user.profilePicture.data;
@@ -436,6 +441,8 @@ const getOpinionsWindow = () => {
         pDate.innerHTML = comment.creationDate.substring(8,10) + '.' + comment.creationDate.substring(5,7) + '.' + comment.creationDate.substring(0,4);
         pLikes.innerHTML = comment.usersWhoLike.length;
         pDislikes.innerHTML = comment.usersWhoDislike.length;
+        iLikes.addEventListener('click', () => sendLike(comment.id, pLikes, pDislikes, iLikes, iDislikes));
+        iDislikes.addEventListener('click', () => sendDislike(comment.id, pLikes, pDislikes, iLikes, iDislikes));
         opinionType.innerHTML = translateKeysToPolish(comment.opinion.name);
         
         date.appendChild(iDate);
@@ -457,6 +464,36 @@ const getOpinionsWindow = () => {
         opinion.appendChild(opinionType);
         return opinion;
     }
+}
+
+const sendLike = (id, likes, dislikes, ilikes, idislikes) => {
+    chrome.runtime.sendMessage({
+        type: 'popup', 
+        message: 'putLike', 
+        id: id
+    }, response => {
+        if(response.token) return;
+        if (response.likes.includes(USER_ID)) ilikes.className = 'bi bi-hand-thumbs-up-fill like';
+        else ilikes.className = 'bi bi-hand-thumbs-up';
+        idislikes.className = 'bi bi-hand-thumbs-down';
+        likes.innerHTML = response.likes.length;
+        dislikes.innerHTML = response.dislikes.length;
+    })
+}
+
+const sendDislike = (id, likes, dislikes, ilikes, idislikes) => {
+    chrome.runtime.sendMessage({
+        type: 'popup', 
+        message: 'putDislike', 
+        id: id
+    }, response => {
+        if(response.token) return;
+        if (response.dislikes.includes(USER_ID)) idislikes.className = 'bi bi-hand-thumbs-down-fill dislike';
+        else idislikes.className = 'bi bi-hand-thumbs-down';
+        ilikes.className = 'bi bi-hand-thumbs-up';
+        likes.innerHTML = response.likes.length;
+        dislikes.innerHTML = response.dislikes.length;
+    })
 }
 
 /*

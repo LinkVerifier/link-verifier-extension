@@ -106,7 +106,53 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     .then(data => sendResponse(data))
                     .catch(error => console.log(error));
                 }
-            })
+            });
+        }
+
+        // put like
+        else if (request.message == 'putLike') {
+            chrome.storage.local.get(['token'], token => {
+                if (token.token === null || token.token === undefined) {
+                    sendResponse({
+                        token: true,
+                    });
+                } else {
+                    fetch(API_URL + 'comments/' + request.id + '/like', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token.token
+                        }
+                    }).then(res => res.json())
+                    .then(data => sendResponse({
+                        likes: data.usersWhoLike,
+                        dislikes: data.usersWhoDislike
+                    })).catch(error => console.log(error));
+                }
+            });
+        }
+
+        // put dislike
+        else if (request.message == 'putDislike') {
+            chrome.storage.local.get(['token'], token => {
+                if (token.token === null || token.token === undefined) {
+                    sendResponse({
+                        token: true,
+                    });
+                } else {
+                    fetch(API_URL + 'comments/' + request.id + '/dislike', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token.token
+                        }
+                    }).then(res => res.json())
+                    .then(data => sendResponse({
+                        likes: data.usersWhoLike,
+                        dislikes: data.usersWhoDislike
+                    })).catch(error => console.log(error));
+                }
+            });
         }
     }
 

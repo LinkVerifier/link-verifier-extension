@@ -63,18 +63,19 @@ header a:hover {
     border: none;
     padding: 5px;
     width: 100%;
-    color: white;
+    color: #ffffff;
     background: none;
     transition: 0.3s;
 }
 .button:hover {
-    color: cornsilk;
+    color: #ffffff;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 95%, #ffffff 95%);
 }
 .button:focus {
     border: none;
     outline: none;
-
-    color: cornsilk;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 90%, #ffffff 90%);
+    color: #ffffff;
 }
 .clicked {
     border-bottom: 2px;
@@ -263,6 +264,7 @@ tr {
     margin-right: 5px;
     font-size: small;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .content-opinions .opinion .opinion-content p {
@@ -300,6 +302,15 @@ tr {
     cursor: pointer;
 }
 
+.content-opinions .opinion .opinion-content .like {
+    color: #33b5e5;
+    filter: drop-shadow( 1px 1px 1px #33b6e52c);
+}
+
+.content-opinions .opinion .opinion-content .dislike {
+    color: red;
+    filter: drop-shadow( 1px 1px 1px rgba(255, 0, 0, 0.178));
+}
 
 /* ADD REVIEW WINDOW */
 
