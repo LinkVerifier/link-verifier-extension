@@ -150,8 +150,8 @@ header a:hover {
     color: black;
     font-size: large;
     font-weight: 500;
-    top: 90px;
-    left: 90px;
+    top: 85px;
+    left: 85px;
     transition: 1s linear;
     animation: fadein .5s;
 }
@@ -172,11 +172,16 @@ header a:hover {
     padding: 0;
     position: absolute;
     padding: 10px;
-    left: 250px;
+    left: 230px;
 }
-tr td, p {
+.table p {
+    padding: 0;
+    animation: fadein .5s;
+    margin: 0;
+}
+tr td, .table table p {
     padding: 0 !important;
-    margin: 0 !important;
+    margin: 0 20px 0 10px !important;
     animation: fadein .5s;
 }
 td {
@@ -187,7 +192,7 @@ tr {
 }
 .table .line, .table .lineBG {
     position: absolute;
-    margin-left: 35px;
+    margin-left: 45px;
     margin-top: 8px;
     height: 5px;
     border-radius: 10px;
@@ -202,15 +207,6 @@ tr {
     background-color: lightgrey;
     transition: all 1s;
 } 
-.table .line:hover {
-    margin-top: 6px;
-    height: 8px;
-}
-.table > table > p {
-    background-color: #007e33;
-    font-weight: 500;
-    text-align: right;
-}
 
 /* ALL OPINIONS WINDOW */
 
@@ -230,12 +226,20 @@ tr {
     height: 320px;
     overflow-y: auto;
     overflow-x: hidden;
+    animation: fadein .5s;
 }
 
 .content-opinions .opinion {
     padding: 10px;
     display: grid;
     grid-template-columns: 70px 250px 160px;
+    background-color: #ffffff00;
+    transition: .5s;
+    animation: fadein 1s;
+}
+
+.content-opinions .opinion:hover {
+    background-color: #ffffffef;
 }
 
 .content-opinions .opinion .image-cropper {
@@ -256,6 +260,9 @@ tr {
 }
 
 .content-opinions .opinion .opinion-content h2 {
+    word-wrap: break-word; 
+    display: inline-block;
+    max-width: 250px;
     font-size: medium;
     font-weight: normal;
 }
@@ -405,6 +412,25 @@ tr {
     background-color: #ffe9e9;
     color: #4e0000;
     border: 1px solid #ff0000;
+}
+
+.content .content-opinions button {
+    margin-top: 20px;
+    margin-right: 30px;
+    position: relative;
+    background-color: rgba(95, 158, 160, 0);
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    float: right;
+}
+
+.content .content-opinions button i {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    font-size: large;
+    color: #cc0000;
 }
 
 

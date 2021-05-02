@@ -301,7 +301,7 @@ var createTable = (allOpinions, contentStats) => {
 }
 
 var animateLine = data => setTimeout(() => {
-    const x = data.percent * .65 + 5 | 0;
+    const x = data.percent * .6 | 0;
     data.line.style.width = x+'px';
 },  100);
 
@@ -384,86 +384,94 @@ const getOpinionsWindow = () => {
             createCommentsWindow(response.link.comments)
         }
     });
+}
 
-    const createCommentsWindow = comments => {
-        var contentOpinions = document.createElement('div');
-        contentOpinions.className = 'content-opinions';
-        comments.forEach(comment => {
-            chrome.runtime.sendMessage({type: 'popup', message: 'getUserById', id: comment.userId}, response => {
-                contentOpinions.appendChild(createComment(comment, response.user));
-            });
+const createCommentsWindow = comments => {
+    var contentOpinions = document.createElement('div');
+    var h4 = document.createElement('h4');
+    var hr = document.createElement('hr');
+    contentOpinions.className = 'content-opinions';
+    h4.innerHTML = 'Komentarze: (' + comments.length + ')'
+    h4.style.margin = '10px 0 0 10px'
+    contentOpinions.appendChild(h4);
+    contentOpinions.appendChild(hr);
+    comments.forEach(comment => {
+        chrome.runtime.sendMessage({type: 'popup', message: 'getUserById', id: comment.userId}, response => {
+            contentOpinions.appendChild(createComment(comment, response.user));
         });
-        content.appendChild(contentOpinions);
-    }
+    });
+    content.appendChild(contentOpinions);
+}
 
-    const createComment = (comment, user) => {
-        var opinion = document.createElement('div');
-        var aImage = document.createElement('a');
-        var imageCropper = document.createElement('div');
-        var profilePicture = document.createElement('img');
-        var opinionContent = document.createElement('div');
-        var a = document.createElement('a');
-        var h2 = document.createElement('h2');
-        var data = document.createElement('div');
-        var date = document.createElement('div');
-        var pDate = document.createElement('p');
-        var iDate = document.createElement('i');
-        var likes = document.createElement('div');
-        var pLikes = document.createElement('p');
-        var iLikes = document.createElement('i');
-        var dislikes = document.createElement('div');
-        var pDislikes = document.createElement('p');
-        var iDislikes = document.createElement('i');
-        var opinionType = document.createElement('div');
+const createComment = (comment, user) => {
+    var opinion = document.createElement('div');
+    var aImage = document.createElement('a');
+    var imageCropper = document.createElement('div');
+    var profilePicture = document.createElement('img');
+    var opinionContent = document.createElement('div');
+    var a = document.createElement('a');
+    var h2 = document.createElement('h2');
+    var data = document.createElement('div');
+    var date = document.createElement('div');
+    var pDate = document.createElement('p');
+    var iDate = document.createElement('i');
+    var likes = document.createElement('div');
+    var pLikes = document.createElement('p');
+    var iLikes = document.createElement('i');
+    var dislikes = document.createElement('div');
+    var pDislikes = document.createElement('p');
+    var iDislikes = document.createElement('i');
+    var opinionType = document.createElement('div');
 
-        opinion.className = 'opinion';
-        imageCropper.className = 'image-cropper';
-        profilePicture.className = 'profile-image';
-        opinionContent.className = 'opinion-content';
-        data.className = 'data';
-        date.className = 'date';
-        iDate.className = 'bi bi-clock';
-        likes.className = 'likes';
-        iLikes.className = 'bi bi-hand-thumbs-up';
-        dislikes.className = 'dislikes';
-        iDislikes.className = 'bi bi-hand-thumbs-down';
-        if (comment.usersWhoLike.includes(USER_ID)) iLikes.className = 'bi bi-hand-thumbs-up-fill like';
-        if (comment.usersWhoDislike.includes(USER_ID)) iDislikes.className = 'bi bi-hand-thumbs-down-fill dislike';
-        opinionType.className = 'opinion-type ' + comment.opinion.name.toLowerCase();
+    opinion.className = 'opinion';
+    imageCropper.className = 'image-cropper';
+    profilePicture.className = 'profile-image';
+    opinionContent.className = 'opinion-content';
+    data.className = 'data';
+    date.className = 'date';
+    iDate.className = 'bi bi-clock';
+    likes.className = 'likes';
+    iLikes.className = 'bi bi-hand-thumbs-up';
+    dislikes.className = 'dislikes';
+    iDislikes.className = 'bi bi-hand-thumbs-down';
+    if (comment.usersWhoLike.includes(USER_ID)) iLikes.className = 'bi bi-hand-thumbs-up-fill like';
+    if (comment.usersWhoDislike.includes(USER_ID)) iDislikes.className = 'bi bi-hand-thumbs-down-fill dislike';
+    opinionType.className = 'opinion-type ' + comment.opinion.name.toLowerCase();
 
-        profilePicture.src = 'data:'+user.profilePicture.type+';base64,'+user.profilePicture.data;
-        aImage.href = SITE_URL + 'users/' + user.id;
-        aImage.target = '_blank';
-        a.href = SITE_URL + 'users/' + user.id;
-        a.target = '_blank';
-        a.innerHTML = user.username;
-        h2.innerHTML = comment.comment;
-        pDate.innerHTML = comment.creationDate.substring(8,10) + '.' + comment.creationDate.substring(5,7) + '.' + comment.creationDate.substring(0,4);
-        pLikes.innerHTML = comment.usersWhoLike.length;
-        pDislikes.innerHTML = comment.usersWhoDislike.length;
-        iLikes.addEventListener('click', () => sendLike(comment.id, pLikes, pDislikes, iLikes, iDislikes));
-        iDislikes.addEventListener('click', () => sendDislike(comment.id, pLikes, pDislikes, iLikes, iDislikes));
-        opinionType.innerHTML = translateKeysToPolish(comment.opinion.name);
+    profilePicture.src = 'data:'+user.profilePicture.type+';base64,'+user.profilePicture.data;
+    aImage.href = SITE_URL + 'users/' + user.id;
+    aImage.target = '_blank';
+    a.href = SITE_URL + 'users/' + user.id;
+    a.target = '_blank';
+    a.innerHTML = user.username;
+    h2.innerHTML = comment.comment;
+    pDate.innerHTML = comment.creationDate.substring(8,10) + '.' + comment.creationDate.substring(5,7) + '.' + comment.creationDate.substring(0,4);
+    pLikes.innerHTML = comment.usersWhoLike.length;
+    pDislikes.innerHTML = comment.usersWhoDislike.length;
+    iLikes.title = 'Polecam';
+    iDislikes.title = 'Nie polecam';
+    iLikes.addEventListener('click', () => sendLike(comment.id, pLikes, pDislikes, iLikes, iDislikes));
+    iDislikes.addEventListener('click', () => sendDislike(comment.id, pLikes, pDislikes, iLikes, iDislikes));
+    opinionType.innerHTML = translateKeysToPolish(comment.opinion.name);
         
-        date.appendChild(iDate);
-        date.appendChild(pDate);
-        likes.appendChild(iLikes);
-        likes.appendChild(pLikes);
-        dislikes.appendChild(iDislikes);
-        dislikes.appendChild(pDislikes);
-        data.appendChild(date);
-        data.appendChild(likes);
-        data.appendChild(dislikes);
-        imageCropper.appendChild(profilePicture);
-        aImage.appendChild(imageCropper);
-        opinionContent.appendChild(a);
-        opinionContent.appendChild(h2);
-        opinionContent.appendChild(data);
-        opinion.appendChild(aImage);
-        opinion.appendChild(opinionContent);
-        opinion.appendChild(opinionType);
-        return opinion;
-    }
+    date.appendChild(iDate);
+    date.appendChild(pDate);
+    likes.appendChild(iLikes);
+    likes.appendChild(pLikes);
+    dislikes.appendChild(iDislikes);
+    dislikes.appendChild(pDislikes);
+    data.appendChild(date);
+    data.appendChild(likes);
+    data.appendChild(dislikes);
+    imageCropper.appendChild(profilePicture);
+    aImage.appendChild(imageCropper);
+    opinionContent.appendChild(a);
+    opinionContent.appendChild(h2);
+    opinionContent.appendChild(data);
+    opinion.appendChild(aImage);
+    opinion.appendChild(opinionContent);
+    opinion.appendChild(opinionType);
+    return opinion;
 }
 
 const sendLike = (id, likes, dislikes, ilikes, idislikes) => {
@@ -530,7 +538,18 @@ const getRateWindow = () => {
             contentStats.appendChild(i);
             contentStats.appendChild(title);
             content.appendChild(contentStats);
+        } else if (response.link.comments) {
+            let comment = checkIfUserPutComment(response.link.comments)
+            if (comment) {
+                databaseHasOpinion(comment);
+            } else {
+                console.log(response.link)
+                console.log(response.link.comments)
+                createRateWindow(response.id); 
+            }
         } else {
+            console.log(response.link)
+            console.log(response.link.comments)
             createRateWindow(response.id);  
         }
     });
@@ -555,7 +574,6 @@ const createRateWindow = link => {
 
     content.appendChild(opinionBox);
     
-
     typesOfOpinions.forEach(opinion => {
         var op = document.createElement('div');
         op.className = Object.keys(opinion)[0].toLowerCase() + ' item';
@@ -579,7 +597,66 @@ const sendOpinion = (opinion, link) => {
         opinion: opinion,
         id: link
     }, response => {
-        console.log(response);
+        while (content.childNodes.length > 0) {
+            content.removeChild(content.lastChild);
+        }
+        var contentStats = document.createElement('div');
+        var title = document.createElement('div');
+        var title2 = document.createElement('div');
+        var i = document.createElement('i');
+            
+        contentStats.className = 'content';
+        title.className = 'title';
+        title2.className = 'title';
+        i.className = 'bi bi-check-circle ok';
+        title.style.top = '130px';
+        title.style.padding = '80px';
+        title2.style.top = '170px';
+        title2.style.padding = '80px';
+        title2.style.fontSize = 'small';
+        title.innerHTML = 'Twoja opinia została pomyślnie zapisana.';
+        title2.innerHTML = 'Dziękujemy za Twój wkład w rozwoju naszego serwisu.';
+            
+        contentStats.appendChild(i);
+        contentStats.appendChild(title);
+        contentStats.appendChild(title2);
+        content.appendChild(contentStats);
+    });
+}
+
+const databaseHasOpinion = comment => {
+    var contentOpinions = document.createElement('div');
+    var h4 = document.createElement('h4');
+    var h5 = document.createElement('h5');
+    var button = document.createElement('button');
+    var hr = document.createElement('hr');
+    var hr_2 = document.createElement('hr');
+    var i = document.createElement('i');
+    contentOpinions.className = 'content-opinions';
+    h4.innerHTML = 'Już wystawiłeś opinię:';
+    h5.innerHTML = 'Aby dodać nową opinię, musisz usunać obecną.';
+    h4.style.margin = '20px 0 0 10px';
+    h5.style.margin = '20px 0 20px 0';
+    h5.style.textAlign = 'center';
+    hr_2.style.margin = 0;
+    i.className = 'bi bi-trash';
+    button.appendChild(i);
+    contentOpinions.appendChild(h4);
+    contentOpinions.appendChild(button);
+    contentOpinions.appendChild(hr);
+    button.addEventListener('click', () => deleteOpinion(comment.id));
+    chrome.runtime.sendMessage({type: 'popup', message: 'getUserById', id: comment.userId}, response => {
+        contentOpinions.appendChild(createComment(comment, response.user));
+        contentOpinions.appendChild(hr_2);
+        contentOpinions.appendChild(h5);
+        //contentOpinions.appendChild(deleteOpinion(comment.id))
+        content.appendChild(contentOpinions);
+    });
+} 
+
+const deleteOpinion = id => {
+    chrome.runtime.sendMessage({type: 'popup', message: 'deleteComment', id: id}, response => {
+        getRateWindow();
     });
 }
 
@@ -626,4 +703,16 @@ const countOpinonsForEachCategory = comments => {
         return previousValue;
     }, {'NEUTRAL':0,'SAFE':0,'RELIABLE':0,'FRAUD':0,'INDECENT_CONTENT':0,'FAKE_NEWS':0,'VIRUS':0});
     return Object.keys(comments).map(e => ( {[e]: comments[e]} ));
+}
+
+const checkIfUserPutComment = comments => {
+    var found = false;
+    for(var i = 0; i < comments.length; i++) {
+        if (comments[i].userId === USER_ID) {
+            found = comments[i];
+            break;
+        } 
+    };
+    //if (found === null || found === undefined) found = false;
+    return found;
 }

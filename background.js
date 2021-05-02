@@ -154,6 +154,25 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 }
             });
         }
+
+        else if (request.message == 'deleteComment') {
+            chrome.storage.local.get(['token'], token => {
+                if (token.token === null || token.token === undefined) {
+                    sendResponse({
+                        token: true,
+                    });
+                } else {
+                    fetch(API_URL + 'comments/' + request.id, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token.token
+                        }
+                    }).then(res => sendResponse())
+                    .catch(error => console.log(error));
+                }
+            });
+        }
     }
 
     // checks if sender is content.js
