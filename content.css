@@ -1,13 +1,100 @@
-.link-verifier-c31d80e9-8bce-4d2a-b4ca-5d82c6536f1d {
-    all: unset;
-    position: absolute;
+.background-danger-1e831b5de1d322b98a82b551353a3cc8 {
+    z-index: 2147483647;
+    position: fixed; 
+    background-image: url("https://www.transparenttextures.com/patterns/inspiration-geometry.png");
+    background-color: #ff0000b0;
+    left: 0;
     top: 0;
-    bottom: 0;
-    width: calc(100% - 40px);
-    height: 20px;
-    z-index: 10000;
-    margin: 10px;
-    padding: 10px;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    animation: fadein-1e831b5de1d322b98a82b551353a3cc8 1s;
+}
+.banner-content-1e831b5de1d322b98a82b551353a3cc8 p, 
+.banner-content-1e831b5de1d322b98a82b551353a3cc8 .close, 
+.banner-content-1e831b5de1d322b98a82b551353a3cc8 a {
+    margin: 0;
+    font-size: large;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+}
+.banner-content-1e831b5de1d322b98a82b551353a3cc8 {
+    z-index: 2147483647;
+    display: block;
+    position: fixed; 
+    top: 100px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow( 3px 3px 10px #0000003a);
+    padding: 20px;
+    min-width: 500px;
+    width: 40%;
     border-radius: 20px;
-    background-color: aquamarine;
+    animation: dropDown-1e831b5de1d322b98a82b551353a3cc8 .5s ease-in-out;
+}
+.danger-1e831b5de1d322b98a82b551353a3cc8 {
+    background-color: #fdf3f3;
+    color: red;
+    border: 2px solid red;
+}
+.warning-1e831b5de1d322b98a82b551353a3cc8 {
+    background-color: #fdf9f1;
+    color: orange;
+    border: 2px solid orange;
+}
+.caution-1e831b5de1d322b98a82b551353a3cc8 {
+    background-color: #f8fdff;;
+    color: #33b5e5;;
+    border: 2px solid #33b5e5;;
+}
+.ok-1e831b5de1d322b98a82b551353a3cc8 {
+    background-color: #e8fff1;
+    color: green;
+    border: 2px solid green;
+}
+.banner-content-1e831b5de1d322b98a82b551353a3cc8 .content {
+    padding-left: 20px;
+    padding-right: 40px;
+    grid-template-columns: 40px auto 100px;
+    display: grid;
+    align-items: center;
+}
+.banner-content-1e831b5de1d322b98a82b551353a3cc8 i {
+    grid-column-start: 1;
+    grid-column-end: 1;
+    font-size: 30px;
+    margin-bottom: 5px;
+}
+.banner-content-1e831b5de1d322b98a82b551353a3cc8 p {
+    grid-column-start: 2;
+    grid-column-end: 2;
+    text-align: center;
+}
+.banner-content-1e831b5de1d322b98a82b551353a3cc8 a {
+    grid-column-start: 3;
+    grid-column-end: 3;
+    color: #007bff;
+}
+.banner-content-1e831b5de1d322b98a82b551353a3cc8 .close {
+    float: right;
+    font-size: large;
+    font-weight: bold;
+}
+.banner-content-1e831b5de1d322b98a82b551353a3cc8 .close:hover {
+    color: #000000;
+    cursor: pointer;
+}
+@keyframes fadein-1e831b5de1d322b98a82b551353a3cc8 {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@keyframes dropDown-1e831b5de1d322b98a82b551353a3cc8 {
+    from { top: -200px; }
+    to   { top: 100px; }
+}
+
+@keyframes dropUp-1e831b5de1d322b98a82b551353a3cc8 {
+    from { top: 100px; }
+    to   { top: -200px; }
 }

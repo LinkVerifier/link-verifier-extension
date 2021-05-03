@@ -1,23 +1,6 @@
 const DOMAIN = 'localhost:8081';
+const SITE_URL = 'http://localhost:8081/'
 let currentURL;
-
-const sendURL = () => {
-    if (currentURL !== window.location.href) {
-        currentURL = window.location.href;
-        chrome.runtime.sendMessage({
-            type: 'content',
-            url: currentURL,
-        }, response => {
-            alert(response.message);
-        });
-    }
-}
-
-const updateUSER = () => {
-    if (window.localStorage.getItem('token') !== null 
-    && window.localStorage.getItem('token') !== undefined) chrome.storage.local.set({token: window.localStorage.getItem('token')});
-    else chrome.storage.local.set({token: null});
-}
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type === 'tabChanged') {
@@ -28,30 +11,87 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 });
 
-const alert = message => {
-    var URL = window.location.href;
-    var divId = 'link-verifier-c31d80e9-8bce-4d2a-b4ca-5d82c6536f1d';
-    var body = document.body;
-    var div = document.createElement('div');
-    div.id = divId;
-    div.textContent = URL
-    /*
-    //div styles
-    console.log(div);
-    document.body.appendChild(div);
-    div.style.all = 'unset';
-    div.style.position = 'absolute';
-    div.style.top = '0';
-    div.style.bottom = '0';
-    div.style.width = 'calc(100% - 40px)';
-    div.style.height = '20px';
-    div.style.zIndex = '10000';
-    div.style.margin = '10px';
-    div.style.padding = '10px';
-    div.style.borderRadius = '30px 30px 30px 30px';
-    div.style.backgroundColor = 'rgb(161, 0, 0)'
-    div.style.color = 'white';
-    */
+const sendURL = () => {
+    if (currentURL !== window.location.href) {
+        currentURL = window.location.href;
+        chrome.runtime.sendMessage({
+            type: 'content',
+            url: currentURL,
+        }, response => {
+            if (response.message.comments.length !== 0) alert(response.message);
+        });
+    }
 }
 
+const updateUSER = () => {
+    if (window.localStorage.getItem('token') !== null 
+    && window.localStorage.getItem('token') !== undefined) chrome.storage.local.set({token: window.localStorage.getItem('token')});
+    else chrome.storage.local.set({token: null});
+}
 
+const alert = link => {
+    var banner = document.createElement('div');
+    var content = document.createElement('div');
+    var close = document.createElement('span');
+    var info = document.createElement('p');
+    var i = document.createElement('i');
+    var a = document.createElement('a');
+
+    banner.className = 'banner-content-1e831b5de1d322b98a82b551353a3cc8 ' + getColor(link.rating);
+    content.className = 'content';
+    close.className = 'close';
+    i.className = getIcon(link.rating); 
+
+    close.innerHTML = '&times;'
+    info.innerHTML = getSentence(link.rating);
+    a.innerHTML = 'szczegóły';
+    a.href = SITE_URL + 'links/' + link.id;
+    a.target = '_blank';
+
+    close.addEventListener('click', () => banner.style.display = 'none');
+
+    if (link.rating < 35) {
+        var bg = document.createElement('div');
+        bg.className = 'background-danger-1e831b5de1d322b98a82b551353a3cc8';
+        close.addEventListener('click', () => bg.style.display = 'none');
+        document.body.appendChild(bg);
+    }
+    if (link.rating >= 75) {
+        setTimeout(() => banner.style.animation = 'dropUp-1e831b5de1d322b98a82b551353a3cc8 .5s ease-in-out', 3000);
+        setTimeout(() => banner.style.display = 'none', 3500);
+    }
+
+    content.appendChild(i);
+    content.appendChild(info);
+    content.appendChild(a);
+    banner.appendChild(close);
+    banner.appendChild(content);
+    document.body.appendChild(banner);
+
+    // brut css injection
+    var css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css';
+    document.getElementsByTagName("head")[0].appendChild(css);
+}
+
+const getSentence = rating => {
+    if (rating < 35) return 'Uwaga! Strona niebezpieczna, zachowaj ostrożność!';
+    if (rating < 50) return 'Strona niebezpieczna, zachowaj ostrożność!';
+    if (rating < 75) return 'Strona potencjalnie niebezpieczna, zachowaj ostrożność';
+    return 'Strona bezpieczna';
+}
+
+const getIcon = rating => {
+    if (rating < 35) return 'bi bi-exclamation-triangle-fill';
+    if (rating < 50) return 'bi bi-exclamation-triangle';
+    if (rating < 75) return 'bi bi-exclamation-circle';
+    return 'bi bi-check-circle';
+}
+
+const getColor = rating => {
+    if (rating < 35) return 'danger-1e831b5de1d322b98a82b551353a3cc8';
+    if (rating < 50) return 'warning-1e831b5de1d322b98a82b551353a3cc8';
+    if (rating < 75) return 'caution-1e831b5de1d322b98a82b551353a3cc8';
+    return 'ok-1e831b5de1d322b98a82b551353a3cc8';
+}
