@@ -70,6 +70,7 @@
     grid-column-start: 2;
     grid-column-end: 2;
     text-align: center;
+    margin: 0 !important;
 }
 .banner-content-1e831b5de1d322b98a82b551353a3cc8 a {
     grid-column-start: 3;

@@ -50,13 +50,13 @@ const alert = link => {
 
     close.addEventListener('click', () => banner.style.display = 'none');
 
-    if (link.rating < 35) {
+    if (link.rating >= 35) {
         var bg = document.createElement('div');
         bg.className = 'background-danger-1e831b5de1d322b98a82b551353a3cc8';
         close.addEventListener('click', () => bg.style.display = 'none');
         document.body.appendChild(bg);
     }
-    if (link.rating >= 75) {
+    if (link.rating < 35) {
         setTimeout(() => banner.style.animation = 'dropUp-1e831b5de1d322b98a82b551353a3cc8 .5s ease-in-out', 3000);
         setTimeout(() => banner.style.display = 'none', 3500);
     }
@@ -76,22 +76,22 @@ const alert = link => {
 }
 
 const getSentence = rating => {
-    if (rating < 35) return 'Uwaga! Strona niebezpieczna, zachowaj ostrożność!';
-    if (rating < 50) return 'Strona niebezpieczna, zachowaj ostrożność!';
-    if (rating < 75) return 'Strona potencjalnie niebezpieczna, zachowaj ostrożność';
-    return 'Strona bezpieczna';
+    if (rating < 35) return 'Strona bezpieczna';
+    if (rating < 50) return 'Strona potencjalnie niebezpieczna, zachowaj ostrożność';
+    if (rating < 75) return 'Strona niebezpieczna, zachowaj ostrożność!';
+    return 'Uwaga! Strona niebezpieczna, zachowaj ostrożność!';
 }
 
 const getIcon = rating => {
-    if (rating < 35) return 'bi bi-exclamation-triangle-fill';
-    if (rating < 50) return 'bi bi-exclamation-triangle';
-    if (rating < 75) return 'bi bi-exclamation-circle';
-    return 'bi bi-check-circle';
+    if (rating < 35) return 'bi bi-check-circle';
+    if (rating < 50) return 'bi bi-exclamation-circle';
+    if (rating < 75) return 'bi bi-exclamation-triangle';
+    return 'bi bi-exclamation-triangle-fill';
 }
 
 const getColor = rating => {
-    if (rating < 35) return 'danger-1e831b5de1d322b98a82b551353a3cc8';
-    if (rating < 50) return 'warning-1e831b5de1d322b98a82b551353a3cc8';
-    if (rating < 75) return 'caution-1e831b5de1d322b98a82b551353a3cc8';
-    return 'ok-1e831b5de1d322b98a82b551353a3cc8';
+    if (rating < 35) return 'ok-1e831b5de1d322b98a82b551353a3cc8';
+    if (rating < 50) return 'caution-1e831b5de1d322b98a82b551353a3cc8';
+    if (rating < 75) return 'warning-1e831b5de1d322b98a82b551353a3cc8';
+    return 'danger-1e831b5de1d322b98a82b551353a3cc8';
 }
