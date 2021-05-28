@@ -2,6 +2,7 @@ const SITE_URL = 'http://localhost:8081/'
 const API_URL = 'http://localhost:8080/'
 const content = document.getElementById('content');
 let USER_ID = null;
+let USER = null;
 
 const typesOfOpinions = [
     {'FRAUD':'negative'},
@@ -27,6 +28,7 @@ const translateKeysToPolish = key => {
 }
 
 chrome.runtime.sendMessage({type: 'popup', message: 'getUser'}, response => {
+    USER = response.user;
     if (response.token !== null && response.token !== undefined) createHeaderForLoggedIn(response.user);
     else createHeaderForNotLoggedIn();
 });
@@ -396,7 +398,7 @@ const createCommentsWindow = comments => {
     contentOpinions.appendChild(h4);
     contentOpinions.appendChild(hr);
     comments.forEach(comment => {
-        chrome.runtime.sendMessage({type: 'popup', message: 'getUserById', id: comment.userId}, response => {
+        chrome.runtime.sendMessage({type: 'popup', message: 'getUserByCommentId', id: comment.id}, response => {
             contentOpinions.appendChild(createComment(comment, response.user));
         });
     });
@@ -597,6 +599,7 @@ const sendOpinion = (opinion, link) => {
         opinion: opinion,
         id: link
     }, response => {
+        updateUSER();
         while (content.childNodes.length > 0) {
             content.removeChild(content.lastChild);
         }
@@ -645,7 +648,7 @@ const databaseHasOpinion = comment => {
     contentOpinions.appendChild(button);
     contentOpinions.appendChild(hr);
     button.addEventListener('click', () => deleteOpinion(comment.id));
-    chrome.runtime.sendMessage({type: 'popup', message: 'getUserById', id: comment.userId}, response => {
+    chrome.runtime.sendMessage({type: 'popup', message: 'getUserByCommentId', id: comment.id}, response => {
         contentOpinions.appendChild(createComment(comment, response.user));
         contentOpinions.appendChild(hr_2);
         contentOpinions.appendChild(h5);
@@ -656,6 +659,7 @@ const databaseHasOpinion = comment => {
 
 const deleteOpinion = id => {
     chrome.runtime.sendMessage({type: 'popup', message: 'deleteComment', id: id}, response => {
+        updateUSER();
         getRateWindow();
     });
 }
@@ -706,13 +710,12 @@ const countOpinonsForEachCategory = comments => {
 }
 
 const checkIfUserPutComment = comments => {
-    var found = false;
-    for(var i = 0; i < comments.length; i++) {
-        if (comments[i].userId === USER_ID) {
-            found = comments[i];
-            break;
-        } 
-    };
-    //if (found === null || found === undefined) found = false;
-    return found;
+    for (let i = 0; i < USER.comments.length; i++) {
+        for (let j = 0; j < comments.length; j++) {
+            if (USER.comments[i].id === comments[j].id) return comments[j];
+        }
+    }
+    return false;
 }
+
+const updateUSER = () => chrome.runtime.sendMessage({type: 'popup', message: 'getUser'}, response => USER = response.user);

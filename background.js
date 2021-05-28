@@ -74,8 +74,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         } 
 
         // get user by ID
-        else if (request.message == 'getUserById') {
-            fetch(API_URL + 'users/' + request.id)
+        else if (request.message == 'getUserByCommentId') {
+            fetch(API_URL + 'users/?commentId=' + request.id)
             .then(res => res.json())
             .then(data => {
                 sendResponse({user: data});

@@ -50,7 +50,7 @@ const alert = link => {
 
     close.addEventListener('click', () => banner.style.display = 'none');
 
-    if (link.rating >= 35) {
+    if (link.rating > 75) {
         var bg = document.createElement('div');
         bg.className = 'background-danger-1e831b5de1d322b98a82b551353a3cc8';
         close.addEventListener('click', () => bg.style.display = 'none');
